@@ -1,0 +1,2 @@
+# R5T.Kefalonia
+A library of IVisualStudioProjectFileSerializer-related functionality.
