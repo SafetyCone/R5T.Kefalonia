@@ -1,0 +1,1 @@
+﻿R5T.Kefalonia.XElement - An IVisualStudioProjectFileToXElementConverter service library.

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Hosting;
 
+using R5T.Chalandri;
+using R5T.Evosmos;
 using R5T.Liverpool;
 
 
@@ -16,14 +18,27 @@ namespace R5T.Kefalonia.Construction
         }
 
 
-        public Program(IApplicationLifetime applicationLifetime)
+        private ITemporaryDirectoryFilePathProvider TemporaryDirectoryFilePathProvider { get; }
+        private ITestingDataDirectoryContentPathsProvider TestingDataDirectoryContentPathsProvider { get; }
+        private IVisualStudioProjectFileSerializer VisualStudioProjectFileSerializer { get; }
+
+
+        public Program(IApplicationLifetime applicationLifetime,
+            ITemporaryDirectoryFilePathProvider temporaryDirectoryFilePathProvider,
+            ITestingDataDirectoryContentPathsProvider testingDataDirectoryContentPathsProvider,
+            IVisualStudioProjectFileSerializer visualStudioProjectFileSerializer)
             : base(applicationLifetime)
         {
+            this.TemporaryDirectoryFilePathProvider = temporaryDirectoryFilePathProvider;
+            this.TestingDataDirectoryContentPathsProvider = testingDataDirectoryContentPathsProvider;
+            this.VisualStudioProjectFileSerializer = visualStudioProjectFileSerializer;
         }
 
         protected override Task SubMainAsync()
         {
-            Console.WriteLine("Hello world!");
+            var exampleVisualStudioProjectFilePath01 = this.TestingDataDirectoryContentPathsProvider.GetExampleVisualStudioProjectFilePath01();
+
+            var projectFile = this.VisualStudioProjectFileSerializer.Deserialize(exampleVisualStudioProjectFilePath01);
 
             return Task.CompletedTask;
         }

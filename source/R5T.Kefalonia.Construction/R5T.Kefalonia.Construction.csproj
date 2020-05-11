@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\R5T.Chalandri.DropboxRivetTestingData\source\R5T.Chalandri.DropboxRivetTestingData\R5T.Chalandri.DropboxRivetTestingData.csproj" />
+    <ProjectReference Include="..\..\..\R5T.Evosmos.CDriveTemp\source\R5T.Evosmos.CDriveTemp\R5T.Evosmos.CDriveTemp.csproj" />
     <ProjectReference Include="..\..\..\R5T.Liverpool\source\R5T.Liverpool.HostedServiceProgram\R5T.Liverpool.HostedServiceProgram.csproj" />
     <ProjectReference Include="..\..\..\R5T.Richmond.Types\source\R5T.Richmond.Types\R5T.Richmond.Types.csproj" />
+    <ProjectReference Include="..\R5T.Kefalonia.XElements\R5T.Kefalonia.XElements.csproj" />
     <ProjectReference Include="..\R5T.Kefalonia\R5T.Kefalonia.csproj" />
   </ItemGroup>
 
