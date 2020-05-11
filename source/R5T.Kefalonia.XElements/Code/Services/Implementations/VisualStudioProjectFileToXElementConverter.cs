@@ -12,9 +12,12 @@ namespace R5T.Kefalonia.XElements
     {
         public ProjectFile ToProjectFile(ProjectXElement projectXElement)
         {
-            var hasPropertyGroup = projectXElement.Value.Elements()
-                .Where(x => x.Name == ProjectFileNodeName.PropertyGroup)
-                .Any();
+            var projectFile = new ProjectFile();
+
+            var propertyGroupXElement = projectXElement.GetPropertyGroup();
+
+
+            var propertyGroupParentIsProject = propertyGroupXElement.GetProjectXElement() == projectXElement;
 
 
             throw new NotImplementedException();

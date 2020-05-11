@@ -3,7 +3,7 @@
 
 namespace R5T.VisualStudioProjectFileStuff
 {
-    public class ProjectFileNodeName
+    public class ProjectFileXmlElementName
     {
         public const string PropertyGroup = "PropertyGroup";
     }
