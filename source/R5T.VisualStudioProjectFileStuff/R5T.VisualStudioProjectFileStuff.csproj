@@ -4,4 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\R5T.Ostersund\source\R5T.Ostersund.Extensions\R5T.Ostersund.Extensions.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,1 @@
+﻿R5T.Kefalonia.Common - Contains services common between both XElement- and XmlElement-based Visual Studio project file de/serializers.

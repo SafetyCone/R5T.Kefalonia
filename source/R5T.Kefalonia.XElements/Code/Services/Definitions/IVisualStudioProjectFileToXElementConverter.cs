@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Xml.Linq;
 
 using R5T.Gloucester.Types;
+using R5T.Magyar;
 
 
 namespace R5T.Kefalonia.XElements
@@ -9,6 +9,6 @@ namespace R5T.Kefalonia.XElements
     public interface IVisualStudioProjectFileToXElementConverter
     {
         ProjectXElement ToProjectXElement(ProjectFile projectFile);
-        ProjectFile ToProjectFile(ProjectXElement projectXElement);
+        Result<ProjectFile> ToProjectFile(ProjectXElement projectXElement);
     }
 }

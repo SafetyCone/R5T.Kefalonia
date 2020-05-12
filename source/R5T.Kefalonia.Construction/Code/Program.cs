@@ -40,6 +40,10 @@ namespace R5T.Kefalonia.Construction
 
             var projectFile = this.VisualStudioProjectFileSerializer.Deserialize(exampleVisualStudioProjectFilePath01);
 
+            var outputFilePath01 = this.TemporaryDirectoryFilePathProvider.GetTemporaryDirectoryFilePath("ProjectFile01.csproj");
+
+            this.VisualStudioProjectFileSerializer.Serialize(outputFilePath01, projectFile);
+
             return Task.CompletedTask;
         }
     }

@@ -7,6 +7,7 @@ using R5T.Chalandri.DropboxRivetTestingData;
 using R5T.Evosmos.CDriveTemp;
 using R5T.Richmond;
 
+using R5T.Kefalonia.Common;
 using R5T.Kefalonia.XElements;
 
 
@@ -26,6 +27,13 @@ namespace R5T.Kefalonia.Construction
                 .AddTestingDataDirectoryContentPathsProvider()
                 .AddSingleton<IVisualStudioProjectFileSerializer, VisualStudioProjectFileSerializer>()
                 .AddSingleton<IVisualStudioProjectFileToXElementConverter, VisualStudioProjectFileToXElementConverter>()
+                .AddSingleton<IVisualStudioProjectFileDeserializationErrorAggregator, VisualStudioProjectFileDeserializationErrorAggregator>()
+                .AddVisualStudioProjectFileDeserializationSettings(settings =>
+                {
+                    settings.ThrowAtErrorOccurrence = false;
+                    settings.ThrowIfAnyErrorAtEnd = false;
+                })
+                .AddSingleton<IVisualStudioProjectFileValidator, VisualStudioProjectFileValidator>()
                 ;
         }
     }

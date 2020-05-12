@@ -23,8 +23,14 @@ namespace R5T.Kefalonia.XElements
 
             var projectXElement = new ProjectXElement(xElement);
 
-            var projectFile = this.VisualStudioProjectFileToXElementConverter.ToProjectFile(projectXElement);
-            return projectFile;
+            var projectFileResult = this.VisualStudioProjectFileToXElementConverter.ToProjectFile(projectXElement);
+
+            foreach (var message in projectFileResult.Messages)
+            {
+                Console.WriteLine(message);
+            }
+
+            return projectFileResult.Value;
         }
 
         public void Serialize(string filePath, ProjectFile projectFile, bool overwrite = true)

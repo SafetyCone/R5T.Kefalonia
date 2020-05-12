@@ -20,8 +20,8 @@ namespace R5T.Kefalonia.XElements
             var output = projectXElement.Value.Elements()
                 .Where(x => ProjectXElementExtensions.IsPropertyGroup(x))
                 .Single()
-                .AsPropertyGroup()
-                ;
+                .AsPropertyGroup();
+
             return output;
         }
     }
