@@ -26,12 +26,13 @@ namespace R5T.Kefalonia.Construction
                 .AddTemporaryDirectoryFilePathProvider()
                 .AddTestingDataDirectoryContentPathsProvider()
                 .AddSingleton<IVisualStudioProjectFileSerializer, VisualStudioProjectFileSerializer>()
+                .AddSingleton<IFunctionalVisualStudioProjectFileSerializer, FunctionalVisualStudioProjectFileSerializer>()
                 .AddSingleton<IVisualStudioProjectFileToXElementConverter, VisualStudioProjectFileToXElementConverter>()
                 .AddSingleton<IVisualStudioProjectFileDeserializationErrorAggregator, VisualStudioProjectFileDeserializationErrorAggregator>()
                 .AddVisualStudioProjectFileDeserializationSettings(settings =>
                 {
                     settings.ThrowAtErrorOccurrence = false;
-                    settings.ThrowIfAnyErrorAtEnd = false;
+                    settings.ThrowIfAnyErrorAtEnd = true;
                 })
                 .AddSingleton<IVisualStudioProjectFileValidator, VisualStudioProjectFileValidator>()
                 ;

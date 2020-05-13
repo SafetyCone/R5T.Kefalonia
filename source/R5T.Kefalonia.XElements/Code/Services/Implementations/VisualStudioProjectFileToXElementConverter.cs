@@ -71,7 +71,7 @@ namespace R5T.Kefalonia.XElements
             IVisualStudioProjectFileValidator visualStudioProjectFileValidator)
         {
             this.VisualStudioProjectFileDeserializationErrorAggregator = visualStudioProjectFileDeserializationErrorAggregator;
-            this.VisualStudioProjectFileDeserializationSettings = VisualStudioProjectFileDeserializationSettings;
+            this.VisualStudioProjectFileDeserializationSettings = visualStudioProjectFileDeserializationSettings;
             this.VisualStudioProjectFileValidator = visualStudioProjectFileValidator;
 
             this.ConstrutorEndSetup();
@@ -260,6 +260,8 @@ namespace R5T.Kefalonia.XElements
             {
                 this.ReportErrors(validationResult.ErrorMessages);
             }
+
+            this.ReportError("There was an error!");
 
             var deserializationErrors = this.VisualStudioProjectFileDeserializationErrorAggregator.GetErrors();
 
