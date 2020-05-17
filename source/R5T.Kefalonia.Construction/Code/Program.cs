@@ -34,17 +34,15 @@ namespace R5T.Kefalonia.Construction
             this.VisualStudioProjectFileSerializer = visualStudioProjectFileSerializer;
         }
 
-        protected override Task SubMainAsync()
+        protected override async Task SubMainAsync()
         {
             var exampleVisualStudioProjectFilePath01 = this.TestingDataDirectoryContentPathsProvider.GetExampleVisualStudioProjectFilePath01();
 
-            var projectFile = this.VisualStudioProjectFileSerializer.Deserialize(exampleVisualStudioProjectFilePath01);
+            var projectFile = await this.VisualStudioProjectFileSerializer.DeserializeAsync(exampleVisualStudioProjectFilePath01);
 
             var outputFilePath01 = this.TemporaryDirectoryFilePathProvider.GetTemporaryDirectoryFilePath("ProjectFile01.csproj");
 
-            this.VisualStudioProjectFileSerializer.Serialize(outputFilePath01, projectFile);
-
-            return Task.CompletedTask;
+            await this.VisualStudioProjectFileSerializer.SerializeAsync(outputFilePath01, projectFile);
         }
     }
 }

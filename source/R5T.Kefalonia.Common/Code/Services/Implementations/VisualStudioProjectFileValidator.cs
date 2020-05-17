@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
+using R5T.D0001;
+using R5T.D0010;
 using R5T.Gloucester.Types;
 using R5T.Ostersund;
 
@@ -9,12 +12,17 @@ namespace R5T.Kefalonia.Common
 {
     public class VisualStudioProjectFileValidator : IVisualStudioProjectFileValidator
     {
+        private INowUtcProvider NowUtcProvider { get; }
+
         // Instance-level to allow actions to bind to instance service instances.
-        private IEnumerable<Func<ProjectFile, IMessageAggregator, bool>> ValidationActions { get; set; }
+        private IEnumerable<Func<ProjectFile, IMessageSink, Task<bool>>> ValidationActions { get; set; }
 
 
-        public VisualStudioProjectFileValidator()
+        public VisualStudioProjectFileValidator(
+            INowUtcProvider nowUtcProvider)
         {
+            this.NowUtcProvider = nowUtcProvider;
+
             this.ConstructorEndSetup();
         }
 
@@ -24,9 +32,9 @@ namespace R5T.Kefalonia.Common
             this.ValidationActions = this.GetValidationActions();
         }
 
-        private IEnumerable<Func<ProjectFile, IMessageAggregator, bool>> GetValidationActions()
+        private IEnumerable<Func<ProjectFile, IMessageSink, Task<bool>>> GetValidationActions()
         {
-            var validationActions = new List<Func<ProjectFile, IMessageAggregator, bool>>()
+            var validationActions = new List<Func<ProjectFile, IMessageSink, Task<bool>>>()
             {
                 this.SdkIsSet,
                 this.TargetFrameworkIsSet,
@@ -35,41 +43,39 @@ namespace R5T.Kefalonia.Common
             return validationActions;
         }
 
-        public ValidationResult Validate(ProjectFile projectFile)
+        public async Task<bool> Validate(ProjectFile projectFile, IMessageSink messageSink)
         {
+            // Sequential task evaluation.
             var isValid = true;
-
-            var messageAggregator = new MessageAggregator();
             foreach (var validationAction in this.ValidationActions)
             {
-                var actionResult = validationAction(projectFile, messageAggregator);
+                var actionResult = await validationAction(projectFile, messageSink);
 
                 isValid = isValid && actionResult;
             }
 
-            var validationResult = new ValidationResult(isValid, messageAggregator.GetMessages());
-            return validationResult;
+            return isValid;
         }
 
-        private bool SdkIsSet(ProjectFile projectFile, IMessageAggregator messageAggregator)
+        private async Task<bool> SdkIsSet(ProjectFile projectFile, IMessageSink messageSink)
         {
             var result = projectFile.SDK.IsSet;
             if(!result)
             {
                 var message = "SDK was not set.";
-                messageAggregator.AddMessage(message);
+                await messageSink.AddErrorMessageAsync(this.NowUtcProvider, message);
             }
 
             return result;
         }
 
-        private bool TargetFrameworkIsSet(ProjectFile projectFile, IMessageAggregator messageAggregator)
+        private async Task<bool> TargetFrameworkIsSet(ProjectFile projectFile, IMessageSink messageSink)
         {
             var result = projectFile.TargetFramework.IsSet;
             if (!result)
             {
                 var message = "TargetFramework was not set.";
-                messageAggregator.AddMessage(message);
+                await messageSink.AddErrorMessageAsync(this.NowUtcProvider, message);
             }
 
             return result;

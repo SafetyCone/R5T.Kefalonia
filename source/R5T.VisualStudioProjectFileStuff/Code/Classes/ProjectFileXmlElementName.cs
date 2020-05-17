@@ -5,6 +5,7 @@ namespace R5T.VisualStudioProjectFileStuff
 {
     public class ProjectFileXmlElementName
     {
+        public const string GenerateDocumentationFile = "GenerateDocumentationFile";
         public const string Include = "Include";
         public const string IsPackable = "IsPackable";
         public const string ItemGroup = "ItemGroup";

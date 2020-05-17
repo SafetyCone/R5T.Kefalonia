@@ -7,5 +7,6 @@ namespace R5T.Kefalonia.Common
     {
         public bool ThrowAtErrorOccurrence { get; set; }
         public bool ThrowIfAnyErrorAtEnd { get; set; }
+        public bool ThrowIfInvalidProjectFile { get; set; }
     }
 }

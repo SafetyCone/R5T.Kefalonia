@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Threading.Tasks;
 
+using R5T.D0010;
 using R5T.Gloucester.Types;
-using R5T.Magyar;
 
 
 namespace R5T.Kefalonia.XElements
 {
     public interface IVisualStudioProjectFileToXElementConverter
     {
-        ProjectXElement ToProjectXElement(ProjectFile projectFile);
-        Result<ProjectFile> ToProjectFile(ProjectXElement projectXElement);
+        Task<ProjectXElement> ToProjectXElement(ProjectFile projectFile, IMessageSink messageSink);
+        Task<ProjectFile> ToProjectFile(ProjectXElement projectXElement, IMessageSink messageSink);
     }
 }

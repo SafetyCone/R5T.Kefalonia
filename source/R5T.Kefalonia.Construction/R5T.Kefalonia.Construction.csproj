@@ -2,6 +2,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\R5T.Chalandri.DropboxRivetTestingData\source\R5T.Chalandri.DropboxRivetTestingData\R5T.Chalandri.DropboxRivetTestingData.csproj" />
+    <ProjectReference Include="..\..\..\R5T.D0001\source\R5T.D0001.Standard\R5T.D0001.Standard.csproj" />
+    <ProjectReference Include="..\..\..\R5T.D0004\source\R5T.D0004.Base\R5T.D0004.Base.csproj" />
+    <ProjectReference Include="..\..\..\R5T.D0004\source\R5T.D0004.Standard\R5T.D0004.Standard.csproj" />
+    <ProjectReference Include="..\..\..\R5T.D0005\source\R5T.D0005.Standard\R5T.D0005.Standard.csproj" />
+    <ProjectReference Include="..\..\..\R5T.D0006\source\R5T.D0006.Base\R5T.D0006.Base.csproj" />
+    <ProjectReference Include="..\..\..\R5T.D0007\source\R5T.D0007.Standard\R5T.D0007.Standard.csproj" />
+    <ProjectReference Include="..\..\..\R5T.D0008\source\R5T.D0008.Standard\R5T.D0008.Standard.csproj" />
+    <ProjectReference Include="..\..\..\R5T.D0011\source\R5T.D0011.Standard\R5T.D0011.Standard.csproj" />
+    <ProjectReference Include="..\..\..\R5T.D0012\source\R5T.D0012.Standard\R5T.D0012.Standard.csproj" />
     <ProjectReference Include="..\..\..\R5T.Evosmos.CDriveTemp\source\R5T.Evosmos.CDriveTemp\R5T.Evosmos.CDriveTemp.csproj" />
     <ProjectReference Include="..\..\..\R5T.Liverpool\source\R5T.Liverpool.HostedServiceProgram\R5T.Liverpool.HostedServiceProgram.csproj" />
     <ProjectReference Include="..\..\..\R5T.Richmond.Types\source\R5T.Richmond.Types\R5T.Richmond.Types.csproj" />

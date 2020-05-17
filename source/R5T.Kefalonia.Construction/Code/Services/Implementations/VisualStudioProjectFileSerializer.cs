@@ -1,37 +1,63 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 
+using R5T.D0001;
+using R5T.D0010;
 using R5T.Gloucester.Types;
+using R5T.Lombardy;
 
 using R5T.Kefalonia.Common;
 
 
-namespace R5T.Kefalonia
+namespace R5T.Kefalonia.Construction
 {
-    public class VisualStudioProjectFileSerializer : IVisualStudioProjectFileSerializer
+    class VisualStudioProjectFileSerializer : IVisualStudioProjectFileSerializer
     {
+        private INowUtcProvider NowUtcProvider { get; }
         private IFunctionalVisualStudioProjectFileSerializer FunctionalVisualStudioProjectFileSerializer { get; }
+        private MessagesOutputFilePathProvider MessagesOutputFilePathProvider { get; }
+        private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
 
 
-        public VisualStudioProjectFileSerializer(IFunctionalVisualStudioProjectFileSerializer functionalVisualStudioProjectFileSerializer)
+        public VisualStudioProjectFileSerializer(
+            INowUtcProvider nowUtcProvider,
+            IFunctionalVisualStudioProjectFileSerializer functionalVisualStudioProjectFileSerializer,
+            MessagesOutputFilePathProvider messagesOutputFilePathProvider,
+            IStringlyTypedPathOperator stringlyTypedPathOperator)
         {
+            this.NowUtcProvider = nowUtcProvider;
             this.FunctionalVisualStudioProjectFileSerializer = functionalVisualStudioProjectFileSerializer;
+            this.MessagesOutputFilePathProvider = messagesOutputFilePathProvider;
+            this.StringlyTypedPathOperator = stringlyTypedPathOperator;
         }
 
-        public ProjectFile Deserialize(string projectFilePath)
+        public async Task<ProjectFile> DeserializeAsync(string projectFilePath)
         {
-            var result = this.FunctionalVisualStudioProjectFileSerializer.Deserialize(projectFilePath);
+            var messagesOutputFilePath = await this.MessagesOutputFilePathProvider.GetMessagesOutputFilePathAsync(
+                Constants.ProjectFileDeserializationFunctionalityName, projectFilePath);
 
-            foreach (var message in result.Messages)
-            {
-                Console.WriteLine(message);
-            }
+            var messagesOutputDirectoryPath = this.StringlyTypedPathOperator.GetDirectoryPathForFilePath(messagesOutputFilePath);
 
-            return result.Value;
+            Directory.CreateDirectory(messagesOutputDirectoryPath);
+
+            var messageRepository = new MessageRepository(messagesOutputFilePath);
+
+            await messageRepository.AddErrorMessageAsync(this.NowUtcProvider, "An error message!");
+            await messageRepository.AddOutputMessageAsync(this.NowUtcProvider, "An output message.");
+
+            var projectFile = await this.FunctionalVisualStudioProjectFileSerializer.DeserializeAsync(projectFilePath, messageRepository);
+            return projectFile;
         }
 
-        public void Serialize(string filePath, ProjectFile value, bool overwrite = true)
+        public async Task SerializeAsync(string projectFilePath, ProjectFile value, bool overwrite = true)
         {
-            this.FunctionalVisualStudioProjectFileSerializer.Serialize(filePath, value, overwrite);
+            var messagesOutputFilePath = await this.MessagesOutputFilePathProvider.GetMessagesOutputFilePathAsync(
+                Constants.ProjectFileDeserializationFunctionalityName, projectFilePath);
+
+            var messageRepository = new MessageRepository(messagesOutputFilePath);
+
+            await this.FunctionalVisualStudioProjectFileSerializer.SerializeAsync(projectFilePath, value, messageRepository, overwrite);
         }
     }
 }
