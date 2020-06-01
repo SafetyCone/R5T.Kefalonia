@@ -12,7 +12,7 @@ namespace R5T.Kefalonia.Construction
     /// <summary>
     /// Async, stringly-typed paths.
     /// </summary>
-    public class ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider : IFunctionalitySpecificMessagesOutputDirectorypathProvider
+    public class ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider : IFunctionalitySpecificMessagesOutputDirectoryPathProvider
     {
         private FunctionalityDirectoryNameProvider FunctionalityDirectoryNameProvider { get; }
         private ProgramNameStartTimeMessagesOutputDirectoryPathProvider ProgramNameStartTimeMessagesOutputDirectoryPathProvider { get; }
