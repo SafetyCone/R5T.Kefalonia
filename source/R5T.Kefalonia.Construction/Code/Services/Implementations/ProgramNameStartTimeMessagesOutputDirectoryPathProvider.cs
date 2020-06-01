@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 
 using R5T.D0006;
-using R5T.D0007;
 using R5T.D0012;
 
 using R5T.Lombardy;
@@ -12,40 +11,34 @@ namespace R5T.Kefalonia.Construction
 {
     public class ProgramNameStartTimeMessagesOutputDirectoryPathProvider : IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider
     {
-        private IMessagesOutputBaseDirectoryPathProvider MessagesOutputBaseDirectoryPathProvider { get; }
         private IProcessStartTimeUtcDirectoryNameProvider ProcessStartTimeUtcDirectoryNameProvider { get; }
-        private IProgramNameDirectoryNameProvider ProgramNameDirectoryNameProvider { get; }
+        private IProgramSpecificMessagesOutputDirectoryPathProvider ProgramSpecificMessagesOutputDirectoryPathProvider { get; }
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
 
 
         public ProgramNameStartTimeMessagesOutputDirectoryPathProvider(
-            IMessagesOutputBaseDirectoryPathProvider messagesOutputBaseDirectoryPathProvider,
             IProcessStartTimeUtcDirectoryNameProvider processStartTimeUtcDirectoryNameProvider,
-            IProgramNameDirectoryNameProvider programNameDirectoryNameProvider,
+            IProgramSpecificMessagesOutputDirectoryPathProvider programSpecificMessagesOutputDirectoryPathProvider,
             IStringlyTypedPathOperator stringlyTypedPathOperator)
         {
-            this.MessagesOutputBaseDirectoryPathProvider = messagesOutputBaseDirectoryPathProvider;
             this.ProcessStartTimeUtcDirectoryNameProvider = processStartTimeUtcDirectoryNameProvider;
-            this.ProgramNameDirectoryNameProvider = programNameDirectoryNameProvider;
+            this.ProgramSpecificMessagesOutputDirectoryPathProvider = programSpecificMessagesOutputDirectoryPathProvider;
             this.StringlyTypedPathOperator = stringlyTypedPathOperator;
         }
 
         public async Task<string> GetProgramStartTimeSpecificMessagesOutputDirectoryPath()
         {
-            var gettingMessagesOutputBaseDirectoryPath = this.MessagesOutputBaseDirectoryPathProvider.GetMessagesOutputBaseDirectoryPathAsync();
-            var gettingProgramNameDirectoryName = this.ProgramNameDirectoryNameProvider.GetProgramNameDirectoryNameAsync();
             var gettingProcessStartTimeUtcDirectoryName = this.ProcessStartTimeUtcDirectoryNameProvider.GetProcessStartTimeUtcDirectoryNameAsync();
+            var gettingProgramSpecificMessagesOutputDirectoryPath = this.ProgramSpecificMessagesOutputDirectoryPathProvider.GetProgramSpecificMessagesOutputDirectoryPath();
 
             await Task.WhenAll(
-                gettingMessagesOutputBaseDirectoryPath,
-                gettingProgramNameDirectoryName,
-                gettingProcessStartTimeUtcDirectoryName);
+                gettingProcessStartTimeUtcDirectoryName,
+                gettingProgramSpecificMessagesOutputDirectoryPath);
 
-            var messagesOutputDirectoryPath = this.StringlyTypedPathOperator.Combine(
-                gettingMessagesOutputBaseDirectoryPath.Result,
-                gettingProgramNameDirectoryName.Result,
+            var programStartTimeSpecificMessagesOutputDirectoryPath = this.StringlyTypedPathOperator.Combine(
+                gettingProgramSpecificMessagesOutputDirectoryPath.Result,
                 gettingProcessStartTimeUtcDirectoryName.Result);
-            return messagesOutputDirectoryPath;
+            return programStartTimeSpecificMessagesOutputDirectoryPath;
         }
     }
 }

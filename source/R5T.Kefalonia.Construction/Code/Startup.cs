@@ -111,12 +111,11 @@ namespace R5T.Kefalonia.Construction
             });
 
             // 2
-            IServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider> programNameStartTimeMessagesOutputDirectoryPathProviderAction = ServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider>.New(serviceCollection =>
+            IServiceAction<IProgramSpecificMessagesOutputDirectoryPathProvider> programSpecificMessagesOutputDirectoryPathProviderAction = ServiceAction<IProgramSpecificMessagesOutputDirectoryPathProvider>.New(serviceCollection =>
             {
                 serviceCollection
-                    .AddSingleton<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider, ProgramNameStartTimeMessagesOutputDirectoryPathProvider>()
+                    .AddSingleton<IProgramSpecificMessagesOutputDirectoryPathProvider, ProgramSpecificMessagesOutputDirectoryPathProvider>()
                     .Run(messagesOutputBaseDirectoryPathProviderAction)
-                    .Run(processStartTimeUtcDirectoryNameProviderAction)
                     .Run(programNameDirectoryNameProviderAction)
                     .Run(stringlyTypedPathOperatorAction)
                     ;
@@ -142,6 +141,17 @@ namespace R5T.Kefalonia.Construction
                     .Run(visualStudioProjectFileValidatorAction)
                     ;
             });
+            IServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider> programNameStartTimeMessagesOutputDirectoryPathProviderAction = ServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider>.New(serviceCollection =>
+            {
+                serviceCollection
+                    .AddSingleton<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider, ProgramNameStartTimeMessagesOutputDirectoryPathProvider>()
+                    .Run(programSpecificMessagesOutputDirectoryPathProviderAction)
+                    .Run(processStartTimeUtcDirectoryNameProviderAction)
+                    .Run(stringlyTypedPathOperatorAction)
+                    ;
+            });
+
+            // 4
             IServiceAction<IFunctionalitySpecificMessagesOutputDirectoryPathProvider> programNameStartTimeFunctionalityMessagesOutputDirectoryPathProviderAction = ServiceAction<IFunctionalitySpecificMessagesOutputDirectoryPathProvider>.New((serviceCollection) =>
             {
                 serviceCollection
@@ -152,7 +162,7 @@ namespace R5T.Kefalonia.Construction
                     ;
             });
 
-            // 4
+            // 5
             IServiceAction<MessagesOutputFilePathProvider> messagesOutputFilePathProviderAction = ServiceAction<MessagesOutputFilePathProvider>.New((serviceCollection) =>
             {
                 serviceCollection
@@ -163,7 +173,7 @@ namespace R5T.Kefalonia.Construction
                     ;
             });
 
-            // 5
+            // 6
             IServiceAction<IVisualStudioProjectFileSerializer> visualStudioProjectFileSerializerAction = ServiceAction<IVisualStudioProjectFileSerializer>.New((serviceCollection) =>
             {
                 serviceCollection
