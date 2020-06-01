@@ -9,6 +9,7 @@ using R5T.T0001;
 
 using R5T.Lombardy;
 using R5T.Magyar.Extensions;
+using R5T.Magyar.IO;
 
 
 namespace R5T.Kefalonia.Construction
@@ -33,9 +34,13 @@ namespace R5T.Kefalonia.Construction
 
         public MessageRepository(IStringlyTypedPathOperator stringlyTypedPathOperator, string messagesOutputFilePath)
         {
+            // Create the directory if it does not exist.
             var messagesOutputDirectoryPath = stringlyTypedPathOperator.GetDirectoryPathForFilePath(messagesOutputFilePath);
 
-            Directory.CreateDirectory(messagesOutputDirectoryPath);
+            DirectoryHelper.CreateDirectoryOkIfExists(messagesOutputDirectoryPath);
+
+            // Delete the output file path, if it exists.
+            FileHelper.DeleteOnlyIfExists(messagesOutputFilePath);
 
             this.MessagesOutputFilePath = messagesOutputFilePath;
         }
