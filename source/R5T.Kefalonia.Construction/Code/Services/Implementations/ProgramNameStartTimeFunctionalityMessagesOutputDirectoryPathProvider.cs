@@ -12,7 +12,7 @@ namespace R5T.Kefalonia.Construction
     /// <summary>
     /// Async, stringly-typed paths.
     /// </summary>
-    public class ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider
+    public class ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider : IFunctionalitySpecificMessagesOutputDirectorypathProvider
     {
         private FunctionalityDirectoryNameProvider FunctionalityDirectoryNameProvider { get; }
         private IMessagesOutputBaseDirectoryPathProvider MessagesOutputBaseDirectoryPathProvider { get; }
@@ -35,7 +35,7 @@ namespace R5T.Kefalonia.Construction
             this.StringlyTypedPathOperator = stringlyTypedPathOperator;
         }
 
-        public async Task<string> GetProgramNameStartTimeFunctionalityMessagesOutputDirectoryPath(string functionalityName)
+        public async Task<string> GetFunctionalitySpecificMessagesOutputDirectoryPath(string functionalityName)
         {
             var gettingMessagesOutputBaseDirectoryPath = this.MessagesOutputBaseDirectoryPathProvider.GetMessagesOutputBaseDirectoryPathAsync();
             var gettingProgramNameDirectoryName = this.ProgramNameDirectoryNameProvider.GetProgramNameDirectoryNameAsync();

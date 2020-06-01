@@ -36,6 +36,13 @@ namespace R5T.Kefalonia.Construction
 
         protected override async Task SubMainAsync()
         {
+            await this.DeserializeExampleProjectFile();
+        }
+
+        //private async Task DeserializeAllProjectFilesIn
+
+        private async Task DeserializeExampleProjectFile()
+        {
             var exampleVisualStudioProjectFilePath01 = this.TestingDataDirectoryContentPathsProvider.GetExampleVisualStudioProjectFilePath01();
 
             var projectFile = await this.VisualStudioProjectFileSerializer.DeserializeAsync(exampleVisualStudioProjectFilePath01);

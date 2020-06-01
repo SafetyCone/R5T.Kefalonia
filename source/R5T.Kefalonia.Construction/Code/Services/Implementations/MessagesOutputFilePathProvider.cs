@@ -25,7 +25,7 @@ namespace R5T.Kefalonia.Construction
 
         public async Task<string> GetMessagesOutputFilePathAsync(string functionalityName, string projectFilePath)
         {
-            var gettingMessagesOutputDirectoryPath = this.ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider.GetProgramNameStartTimeFunctionalityMessagesOutputDirectoryPath(
+            var gettingMessagesOutputDirectoryPath = this.ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider.GetFunctionalitySpecificMessagesOutputDirectoryPath(
                 functionalityName);
             var gettingMessagesOutputFileName = this.ProjectFileDeserializationMessagesOutputFileNameProvider.GetProjectFileDeserializationMessagesOutputFileNameAsync(projectFilePath);
 
