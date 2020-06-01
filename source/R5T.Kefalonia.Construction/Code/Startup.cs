@@ -87,15 +87,25 @@ namespace R5T.Kefalonia.Construction
                     .Run(stringlyTypedPathOperatorAction)
                     ;
             });
-            IServiceAction<ProjectFileDeserializationMessagesOutputFileNameProvider> projectFileDeserializationMessagesOutputFileNameProviderAction = ServiceAction<ProjectFileDeserializationMessagesOutputFileNameProvider>.New((serviceCollection) =>
-            {
-                serviceCollection
-                    .AddSingleton<ProjectFileDeserializationMessagesOutputFileNameProvider>()
-                    .Run(fileNameOperatorAction)
-                    .Run(guidProviderAction)
-                    .Run(stringlyTypedPathOperatorAction)
-                    ;
-            });
+            IServiceAction<IProjectFileDeserializationMessagesOutputFileNameProvider> projectFileDeserializationMessagesOutputFileNameProviderAction = 
+                isConstruction
+                ? ServiceAction<IProjectFileDeserializationMessagesOutputFileNameProvider>.New((serviceCollection) =>
+                {
+                    serviceCollection
+                        .AddSingleton<IProjectFileDeserializationMessagesOutputFileNameProvider, ConstructionTimeProjectFileDeserializationMessagesOutputFileNameProvider>()
+                        .Run(fileNameOperatorAction)
+                        .Run(stringlyTypedPathOperatorAction)
+                        ;
+                })
+                : ServiceAction<IProjectFileDeserializationMessagesOutputFileNameProvider>.New((serviceCollection) =>
+                {
+                    serviceCollection
+                        .AddSingleton<IProjectFileDeserializationMessagesOutputFileNameProvider, ProjectFileDeserializationMessagesOutputFileNameProvider>()
+                        .Run(fileNameOperatorAction)
+                        .Run(guidProviderAction)
+                        .Run(stringlyTypedPathOperatorAction)
+                        ;
+                });
             IServiceAction<IVisualStudioProjectFileToXElementConverter> visualStudioProjectFileToXElementConverter = ServiceAction<IVisualStudioProjectFileToXElementConverter>.New((serviceCollection) =>
             {
                 serviceCollection

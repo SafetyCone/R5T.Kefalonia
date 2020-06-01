@@ -10,13 +10,13 @@ namespace R5T.Kefalonia.Construction
 {
     class MessagesOutputFilePathProvider
     {
-        private ProjectFileDeserializationMessagesOutputFileNameProvider ProjectFileDeserializationMessagesOutputFileNameProvider { get; }
+        private IProjectFileDeserializationMessagesOutputFileNameProvider ProjectFileDeserializationMessagesOutputFileNameProvider { get; }
         private IFunctionalitySpecificMessagesOutputDirectoryPathProvider FunctionalitySpecificMessagesOutputDirectoryPathProvider { get; }
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
 
 
         public MessagesOutputFilePathProvider(
-            ProjectFileDeserializationMessagesOutputFileNameProvider projectFileDeserializationMessagesOutputFileNameProvider,
+            IProjectFileDeserializationMessagesOutputFileNameProvider projectFileDeserializationMessagesOutputFileNameProvider,
             IFunctionalitySpecificMessagesOutputDirectoryPathProvider functionalitySpecificMessagesOutputDirectoryPathProvider,
             IStringlyTypedPathOperator stringlyTypedPathOperator)
         {

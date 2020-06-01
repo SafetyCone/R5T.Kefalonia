@@ -39,8 +39,7 @@ namespace R5T.Kefalonia.Construction
 
             var messageRepository = new MessageRepository(this.StringlyTypedPathOperator, messagesOutputFilePath);
 
-            await messageRepository.AddErrorMessageAsync(this.NowUtcProvider, "An error message!");
-            await messageRepository.AddOutputMessageAsync(this.NowUtcProvider, "An output message.");
+            await messageRepository.AddOutputMessageAsync(this.NowUtcProvider, $"Deserialization of:\n{projectFilePath}");
 
             var projectFile = await this.FunctionalVisualStudioProjectFileSerializer.DeserializeAsync(projectFilePath, messageRepository);
             return projectFile;
@@ -53,8 +52,7 @@ namespace R5T.Kefalonia.Construction
 
             var messageRepository = new MessageRepository(this.StringlyTypedPathOperator, messagesOutputFilePath);
 
-            await messageRepository.AddErrorMessageAsync(this.NowUtcProvider, "An error message!");
-            await messageRepository.AddOutputMessageAsync(this.NowUtcProvider, "An output message.");
+            await messageRepository.AddOutputMessageAsync(this.NowUtcProvider, $"Serialization of:\n{projectFilePath}");
 
             await this.FunctionalVisualStudioProjectFileSerializer.SerializeAsync(projectFilePath, value, messageRepository, overwrite);
         }

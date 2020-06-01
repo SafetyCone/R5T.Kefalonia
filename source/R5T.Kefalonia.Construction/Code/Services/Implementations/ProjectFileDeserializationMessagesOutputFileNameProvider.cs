@@ -11,7 +11,7 @@ namespace R5T.Kefalonia.Construction
     /// <summary>
     /// Async, stringly-typed paths.
     /// </summary>
-    class ProjectFileDeserializationMessagesOutputFileNameProvider
+    class ProjectFileDeserializationMessagesOutputFileNameProvider : IProjectFileDeserializationMessagesOutputFileNameProvider
     {
         private IFileNameOperator FileNameOperator { get; }
         private IGuidProvider GuidProvider { get; }
