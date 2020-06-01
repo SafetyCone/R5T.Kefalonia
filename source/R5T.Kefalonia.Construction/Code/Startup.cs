@@ -42,6 +42,8 @@ namespace R5T.Kefalonia.Construction
 
         protected override void ConfigureServicesBody(IServiceCollection services)
         {
+            var isConstruction = true; // Perhaps get from service or configuration.
+
             // -1
             (
             IServiceAction<IDirectoryNameOperator> _,
@@ -141,15 +143,26 @@ namespace R5T.Kefalonia.Construction
                     .Run(visualStudioProjectFileValidatorAction)
                     ;
             });
-            IServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider> programNameStartTimeMessagesOutputDirectoryPathProviderAction = ServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider>.New(serviceCollection =>
-            {
-                serviceCollection
-                    .AddSingleton<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider, ProgramNameStartTimeMessagesOutputDirectoryPathProvider>()
-                    .Run(programSpecificMessagesOutputDirectoryPathProviderAction)
-                    .Run(processStartTimeUtcDirectoryNameProviderAction)
-                    .Run(stringlyTypedPathOperatorAction)
-                    ;
-            });
+            IServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider> programNameStartTimeMessagesOutputDirectoryPathProviderAction =
+                isConstruction
+                ? ServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider>.New(serviceCollection =>
+                {
+                    serviceCollection
+                        .AddSingleton<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider, ConstructionTimeMessagesOutputDirectoryPathProvider>()
+                        .Run(programSpecificMessagesOutputDirectoryPathProviderAction)
+                        .Run(stringlyTypedPathOperatorAction)
+                        ;
+                })
+                : ServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider>.New(serviceCollection =>
+                {
+                    serviceCollection
+                        .AddSingleton<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider, ProgramNameStartTimeMessagesOutputDirectoryPathProvider>()
+                        .Run(programSpecificMessagesOutputDirectoryPathProviderAction)
+                        .Run(processStartTimeUtcDirectoryNameProviderAction)
+                        .Run(stringlyTypedPathOperatorAction)
+                        ;
+                })
+                ;
 
             // 4
             IServiceAction<IFunctionalitySpecificMessagesOutputDirectoryPathProvider> programNameStartTimeFunctionalityMessagesOutputDirectoryPathProviderAction = ServiceAction<IFunctionalitySpecificMessagesOutputDirectoryPathProvider>.New((serviceCollection) =>
