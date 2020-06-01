@@ -15,43 +15,31 @@ namespace R5T.Kefalonia.Construction
     public class ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider : IFunctionalitySpecificMessagesOutputDirectorypathProvider
     {
         private FunctionalityDirectoryNameProvider FunctionalityDirectoryNameProvider { get; }
-        private IMessagesOutputBaseDirectoryPathProvider MessagesOutputBaseDirectoryPathProvider { get; }
-        private IProcessStartTimeUtcDirectoryNameProvider ProcessStartTimeUtcDirectoryNameProvider { get; }
-        private IProgramNameDirectoryNameProvider ProgramNameDirectoryNameProvider { get; }
+        private ProgramNameStartTimeMessagesOutputDirectoryPathProvider ProgramNameStartTimeMessagesOutputDirectoryPathProvider { get; }
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
 
 
         public ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider(
             FunctionalityDirectoryNameProvider functionalityDirectoryNameProvider,
-            IMessagesOutputBaseDirectoryPathProvider messagesOutputBaseDirectoryPathProvider,
-            IProcessStartTimeUtcDirectoryNameProvider processStartTimeUtcDirectoryNameProvider,
-            IProgramNameDirectoryNameProvider programNameDirectoryNameProvider,
+            ProgramNameStartTimeMessagesOutputDirectoryPathProvider programNameStartTimeMessagesOutputDirectoryPathProvider,
             IStringlyTypedPathOperator stringlyTypedPathOperator)
         {
             this.FunctionalityDirectoryNameProvider = functionalityDirectoryNameProvider;
-            this.MessagesOutputBaseDirectoryPathProvider = messagesOutputBaseDirectoryPathProvider;
-            this.ProcessStartTimeUtcDirectoryNameProvider = processStartTimeUtcDirectoryNameProvider;
-            this.ProgramNameDirectoryNameProvider = programNameDirectoryNameProvider;
+            this.ProgramNameStartTimeMessagesOutputDirectoryPathProvider = programNameStartTimeMessagesOutputDirectoryPathProvider;
             this.StringlyTypedPathOperator = stringlyTypedPathOperator;
         }
 
         public async Task<string> GetFunctionalitySpecificMessagesOutputDirectoryPath(string functionalityName)
         {
-            var gettingMessagesOutputBaseDirectoryPath = this.MessagesOutputBaseDirectoryPathProvider.GetMessagesOutputBaseDirectoryPathAsync();
-            var gettingProgramNameDirectoryName = this.ProgramNameDirectoryNameProvider.GetProgramNameDirectoryNameAsync();
-            var gettingProcessStartTimeUtcDirectoryName = this.ProcessStartTimeUtcDirectoryNameProvider.GetProcessStartTimeUtcDirectoryNameAsync();
+            var gettingProgramNameStartTimeMessagesOutputDirectoryPath = this.ProgramNameStartTimeMessagesOutputDirectoryPathProvider.GetProgramNameStartTimeMessagesOutputDirectoryPath();
             var gettingFunctionalityDirectoryName = this.FunctionalityDirectoryNameProvider.GetFunctionalityDirectoryNameAsync(functionalityName);
 
             await Task.WhenAll(
-                gettingMessagesOutputBaseDirectoryPath,
-                gettingProgramNameDirectoryName,
-                gettingProcessStartTimeUtcDirectoryName,
+                gettingProgramNameStartTimeMessagesOutputDirectoryPath,
                 gettingFunctionalityDirectoryName);
 
             var messagesOutputDirectoryPath = this.StringlyTypedPathOperator.Combine(
-                gettingMessagesOutputBaseDirectoryPath.Result,
-                gettingProgramNameDirectoryName.Result,
-                gettingProcessStartTimeUtcDirectoryName.Result,
+                gettingProgramNameStartTimeMessagesOutputDirectoryPath.Result,
                 gettingFunctionalityDirectoryName.Result);
             return messagesOutputDirectoryPath;
         }

@@ -42,6 +42,7 @@ namespace R5T.Kefalonia.Construction
 
         protected override void ConfigureServicesBody(IServiceCollection services)
         {
+            // -1
             (
             IServiceAction<IDirectoryNameOperator> _,
             IServiceAction<IDirectorySeparatorOperator> _,
@@ -50,6 +51,7 @@ namespace R5T.Kefalonia.Construction
             IServiceAction<IStringlyTypedPathOperator> stringlyTypedPathOperatorAction
             ) = services.AddStringlyTypedPathRelatedOperatorsAction();
 
+            // 0
             IServiceAction<FunctionalityDirectoryNameProvider> functionalityDirectoryNameProviderAction = ServiceAction<FunctionalityDirectoryNameProvider>.New(() => services.AddSingleton<FunctionalityDirectoryNameProvider>());
             IServiceAction<IGuidProvider> guidProviderAction = services.AddGuidProviderAction();
             IServiceAction<INowUtcProvider> nowUtcProviderAction = services.AddNowUtcProviderAction();
@@ -69,6 +71,7 @@ namespace R5T.Kefalonia.Construction
                     });
             });
 
+            // 1
             IServiceAction<IProcessStartTimeUtcDirectoryNameProvider> processStartTimeUtcDirectoryNameProviderAction = services.AddProcessStartTimeUtcDirectoryNameProviderAction(
                 processStartTimeProviderAction,
                 timestampUtcDirectoryNameProviderAction);
@@ -107,11 +110,11 @@ namespace R5T.Kefalonia.Construction
                     ;
             });
 
-            IServiceAction<ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider> programNameStartTimeFunctionalityMessagesOutputDirectoryPathProviderAction = ServiceAction<ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider>.New((serviceCollection) =>
+            // 2
+            IServiceAction<ProgramNameStartTimeMessagesOutputDirectoryPathProvider> programNameStartTimeMessagesOutputDirectoryPathProviderAction = ServiceAction<ProgramNameStartTimeMessagesOutputDirectoryPathProvider>.New(serviceCollection =>
             {
                 serviceCollection
-                    .AddSingleton<ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider>()
-                    .Run(functionalityDirectoryNameProviderAction)
+                    .AddSingleton<ProgramNameStartTimeMessagesOutputDirectoryPathProvider>()
                     .Run(messagesOutputBaseDirectoryPathProviderAction)
                     .Run(processStartTimeUtcDirectoryNameProviderAction)
                     .Run(programNameDirectoryNameProviderAction)
@@ -127,7 +130,7 @@ namespace R5T.Kefalonia.Construction
                     ;
             });
 
-
+            // 3
             IServiceAction<IFunctionalVisualStudioProjectFileSerializer> functionalVisualStudioProjectFileSerializerAction = ServiceAction<IFunctionalVisualStudioProjectFileSerializer>.New((serviceCollection) =>
             {
                 serviceCollection
@@ -139,6 +142,17 @@ namespace R5T.Kefalonia.Construction
                     .Run(visualStudioProjectFileValidatorAction)
                     ;
             });
+            IServiceAction<ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider> programNameStartTimeFunctionalityMessagesOutputDirectoryPathProviderAction = ServiceAction<ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider>.New((serviceCollection) =>
+            {
+                serviceCollection
+                    .AddSingleton<ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider>()
+                    .Run(functionalityDirectoryNameProviderAction)
+
+                    .Run(stringlyTypedPathOperatorAction)
+                    ;
+            });
+
+            // 4
             IServiceAction<MessagesOutputFilePathProvider> messagesOutputFilePathProviderAction = ServiceAction<MessagesOutputFilePathProvider>.New((serviceCollection) =>
             {
                 serviceCollection
@@ -149,6 +163,7 @@ namespace R5T.Kefalonia.Construction
                     ;
             });
 
+            // 5
             IServiceAction<IVisualStudioProjectFileSerializer> visualStudioProjectFileSerializerAction = ServiceAction<IVisualStudioProjectFileSerializer>.New((serviceCollection) =>
             {
                 serviceCollection
@@ -158,7 +173,6 @@ namespace R5T.Kefalonia.Construction
                     .Run(stringlyTypedPathOperatorAction)
                     ;
             });
-
 
             services
                 .Run(fileNameOperatorAction)
@@ -172,6 +186,7 @@ namespace R5T.Kefalonia.Construction
                 .Run(processStartTimeProviderAction)
                 .Run(programNameDirectoryNameProviderAction)
                 .Run(programNameProviderAction)
+                .Run(programNameStartTimeMessagesOutputDirectoryPathProviderAction)
                 .Run(programNameStartTimeFunctionalityMessagesOutputDirectoryPathProviderAction)
                 .Run(projectFileDeserializationMessagesOutputFileNameProviderAction)
                 .Run(relativeFilePathsVisualStudioProjectFileSerializerAction)
