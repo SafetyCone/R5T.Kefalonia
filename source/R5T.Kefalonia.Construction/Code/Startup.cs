@@ -111,10 +111,10 @@ namespace R5T.Kefalonia.Construction
             });
 
             // 2
-            IServiceAction<ProgramNameStartTimeMessagesOutputDirectoryPathProvider> programNameStartTimeMessagesOutputDirectoryPathProviderAction = ServiceAction<ProgramNameStartTimeMessagesOutputDirectoryPathProvider>.New(serviceCollection =>
+            IServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider> programNameStartTimeMessagesOutputDirectoryPathProviderAction = ServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider>.New(serviceCollection =>
             {
                 serviceCollection
-                    .AddSingleton<ProgramNameStartTimeMessagesOutputDirectoryPathProvider>()
+                    .AddSingleton<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider, ProgramNameStartTimeMessagesOutputDirectoryPathProvider>()
                     .Run(messagesOutputBaseDirectoryPathProviderAction)
                     .Run(processStartTimeUtcDirectoryNameProviderAction)
                     .Run(programNameDirectoryNameProviderAction)
@@ -142,12 +142,12 @@ namespace R5T.Kefalonia.Construction
                     .Run(visualStudioProjectFileValidatorAction)
                     ;
             });
-            IServiceAction<ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider> programNameStartTimeFunctionalityMessagesOutputDirectoryPathProviderAction = ServiceAction<ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider>.New((serviceCollection) =>
+            IServiceAction<IFunctionalitySpecificMessagesOutputDirectoryPathProvider> programNameStartTimeFunctionalityMessagesOutputDirectoryPathProviderAction = ServiceAction<IFunctionalitySpecificMessagesOutputDirectoryPathProvider>.New((serviceCollection) =>
             {
                 serviceCollection
-                    .AddSingleton<ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider>()
+                    .AddSingleton<IFunctionalitySpecificMessagesOutputDirectoryPathProvider, ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider>()
                     .Run(functionalityDirectoryNameProviderAction)
-
+                    .Run(programNameStartTimeMessagesOutputDirectoryPathProviderAction)
                     .Run(stringlyTypedPathOperatorAction)
                     ;
             });

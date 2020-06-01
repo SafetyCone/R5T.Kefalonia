@@ -15,23 +15,23 @@ namespace R5T.Kefalonia.Construction
     public class ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider : IFunctionalitySpecificMessagesOutputDirectoryPathProvider
     {
         private FunctionalityDirectoryNameProvider FunctionalityDirectoryNameProvider { get; }
-        private ProgramNameStartTimeMessagesOutputDirectoryPathProvider ProgramNameStartTimeMessagesOutputDirectoryPathProvider { get; }
+        private IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider ProgramStartTimeSpecificMessagesOutputDirectoryPathProvider { get; }
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
 
 
         public ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider(
             FunctionalityDirectoryNameProvider functionalityDirectoryNameProvider,
-            ProgramNameStartTimeMessagesOutputDirectoryPathProvider programNameStartTimeMessagesOutputDirectoryPathProvider,
+            IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider programStartTimeSpecificMessagesOutputDirectoryPathProvider,
             IStringlyTypedPathOperator stringlyTypedPathOperator)
         {
             this.FunctionalityDirectoryNameProvider = functionalityDirectoryNameProvider;
-            this.ProgramNameStartTimeMessagesOutputDirectoryPathProvider = programNameStartTimeMessagesOutputDirectoryPathProvider;
+            this.ProgramStartTimeSpecificMessagesOutputDirectoryPathProvider = programStartTimeSpecificMessagesOutputDirectoryPathProvider;
             this.StringlyTypedPathOperator = stringlyTypedPathOperator;
         }
 
         public async Task<string> GetFunctionalitySpecificMessagesOutputDirectoryPath(string functionalityName)
         {
-            var gettingProgramNameStartTimeMessagesOutputDirectoryPath = this.ProgramNameStartTimeMessagesOutputDirectoryPathProvider.GetProgramNameStartTimeMessagesOutputDirectoryPath();
+            var gettingProgramNameStartTimeMessagesOutputDirectoryPath = this.ProgramStartTimeSpecificMessagesOutputDirectoryPathProvider.GetProgramStartTimeSpecificMessagesOutputDirectoryPath();
             var gettingFunctionalityDirectoryName = this.FunctionalityDirectoryNameProvider.GetFunctionalityDirectoryNameAsync(functionalityName);
 
             await Task.WhenAll(

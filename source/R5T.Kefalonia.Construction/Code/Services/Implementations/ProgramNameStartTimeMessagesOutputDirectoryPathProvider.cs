@@ -10,7 +10,7 @@ using R5T.Lombardy;
 
 namespace R5T.Kefalonia.Construction
 {
-    public class ProgramNameStartTimeMessagesOutputDirectoryPathProvider
+    public class ProgramNameStartTimeMessagesOutputDirectoryPathProvider : IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider
     {
         private IMessagesOutputBaseDirectoryPathProvider MessagesOutputBaseDirectoryPathProvider { get; }
         private IProcessStartTimeUtcDirectoryNameProvider ProcessStartTimeUtcDirectoryNameProvider { get; }
@@ -30,7 +30,7 @@ namespace R5T.Kefalonia.Construction
             this.StringlyTypedPathOperator = stringlyTypedPathOperator;
         }
 
-        public async Task<string> GetProgramNameStartTimeMessagesOutputDirectoryPath()
+        public async Task<string> GetProgramStartTimeSpecificMessagesOutputDirectoryPath()
         {
             var gettingMessagesOutputBaseDirectoryPath = this.MessagesOutputBaseDirectoryPathProvider.GetMessagesOutputBaseDirectoryPathAsync();
             var gettingProgramNameDirectoryName = this.ProgramNameDirectoryNameProvider.GetProgramNameDirectoryNameAsync();
