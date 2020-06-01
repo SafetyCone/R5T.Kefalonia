@@ -5,8 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using R5T.D0010;
-using R5T.Magyar.Extensions;
 using R5T.T0001;
+
+using R5T.Lombardy;
+using R5T.Magyar.Extensions;
 
 
 namespace R5T.Kefalonia.Construction
@@ -29,8 +31,12 @@ namespace R5T.Kefalonia.Construction
         private List<Message> InMemorySink { get; } = new List<Message>();
 
 
-        public MessageRepository(string messagesOutputFilePath)
+        public MessageRepository(IStringlyTypedPathOperator stringlyTypedPathOperator, string messagesOutputFilePath)
         {
+            var messagesOutputDirectoryPath = stringlyTypedPathOperator.GetDirectoryPathForFilePath(messagesOutputFilePath);
+
+            Directory.CreateDirectory(messagesOutputDirectoryPath);
+
             this.MessagesOutputFilePath = messagesOutputFilePath;
         }
 

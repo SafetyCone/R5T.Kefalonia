@@ -37,12 +37,7 @@ namespace R5T.Kefalonia.Construction
             var messagesOutputFilePath = await this.MessagesOutputFilePathProvider.GetMessagesOutputFilePathAsync(
                 Constants.ProjectFileDeserializationFunctionalityName, projectFilePath);
 
-            var messageRepository = new MessageRepository(messagesOutputFilePath);
-
-            // Sadly, need to create directory. TODO: fix!
-            var messagesOutputDirectoryPath = this.StringlyTypedPathOperator.GetDirectoryPathForFilePath(messagesOutputFilePath);
-
-            Directory.CreateDirectory(messagesOutputDirectoryPath);
+            var messageRepository = new MessageRepository(this.StringlyTypedPathOperator, messagesOutputFilePath);
 
             await messageRepository.AddErrorMessageAsync(this.NowUtcProvider, "An error message!");
             await messageRepository.AddOutputMessageAsync(this.NowUtcProvider, "An output message.");
@@ -56,12 +51,7 @@ namespace R5T.Kefalonia.Construction
             var messagesOutputFilePath = await this.MessagesOutputFilePathProvider.GetMessagesOutputFilePathAsync(
                 Constants.ProjectFileSerializationFunctionalityName, projectFilePath);
 
-            var messageRepository = new MessageRepository(messagesOutputFilePath);
-
-            // Sadly, need to create directory. TODO: fix!
-            var messagesOutputDirectoryPath = this.StringlyTypedPathOperator.GetDirectoryPathForFilePath(messagesOutputFilePath);
-
-            Directory.CreateDirectory(messagesOutputDirectoryPath);
+            var messageRepository = new MessageRepository(this.StringlyTypedPathOperator, messagesOutputFilePath);
 
             await messageRepository.AddErrorMessageAsync(this.NowUtcProvider, "An error message!");
             await messageRepository.AddOutputMessageAsync(this.NowUtcProvider, "An output message.");
