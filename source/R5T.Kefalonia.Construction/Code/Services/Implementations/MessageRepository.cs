@@ -34,7 +34,7 @@ namespace R5T.Kefalonia.Construction
             this.MessagesOutputFilePath = messagesOutputFilePath;
         }
 
-        public async Task AddMessageAsync(Message message)
+        public async Task AddAsync(Message message)
         {
             var formattedMessage = MessageRepository.FormatMessage(message);
 
@@ -61,7 +61,7 @@ namespace R5T.Kefalonia.Construction
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<Message>> GetMessagesAsync(Func<Message, bool> predicate)
+        public Task<IEnumerable<Message>> GetAllAsync(Func<Message, bool> predicate)
         {
             var messages = this.InMemorySink
                 .Where(predicate);
