@@ -15,19 +15,22 @@ namespace R5T.Kefalonia.Construction
     {
         private IFileNameOperator FileNameOperator { get; }
         private IGuidProvider GuidProvider { get; }
+        private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
 
 
         public ProjectFileDeserializationMessagesOutputFileNameProvider(
             IFileNameOperator fileNameOperator,
-            IGuidProvider guidProvider)
+            IGuidProvider guidProvider,
+            IStringlyTypedPathOperator stringlyTypedPathOperator)
         {
             this.FileNameOperator = fileNameOperator;
             this.GuidProvider = guidProvider;
+            this.StringlyTypedPathOperator = stringlyTypedPathOperator;
         }
 
         public async Task<string> GetProjectFileDeserializationMessagesOutputFileNameAsync(string projectFilePath)
         {
-            var fileNameWithoutExtension = this.FileNameOperator.GetFileNameWithoutExtension(projectFilePath);
+            var fileNameWithoutExtension = this.StringlyTypedPathOperator.GetFileNameWithoutExtension(projectFilePath);
 
             var guid = await this.GuidProvider.GetGuidAsync();
 
