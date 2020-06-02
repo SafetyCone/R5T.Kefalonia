@@ -19,7 +19,6 @@ namespace R5T.Kefalonia.Construction
         private IMessageSinkProvider MessageSinkProvider { get; }
         private INowUtcProvider NowUtcProvider { get; }
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
-        private IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider VisualStudioProjectFileSerializerMessagesOutputFilePathProvider { get; }
 
 
         public VisualStudioProjectFileSerializer(
@@ -27,50 +26,30 @@ namespace R5T.Kefalonia.Construction
             IMessageFormatter messageFormatter,
             IMessageSinkProvider messageSinkProvider,
             INowUtcProvider nowUtcProvider,
-            IStringlyTypedPathOperator stringlyTypedPathOperator,
-            IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider messagesOutputFilePathProvider)
+            IStringlyTypedPathOperator stringlyTypedPathOperator)
         {
             this.FunctionalVisualStudioProjectFileSerializer = functionalVisualStudioProjectFileSerializer;
             this.MessageFormatter = messageFormatter;
             this.MessageSinkProvider = messageSinkProvider;
             this.NowUtcProvider = nowUtcProvider;
             this.StringlyTypedPathOperator = stringlyTypedPathOperator;
-            this.VisualStudioProjectFileSerializerMessagesOutputFilePathProvider = messagesOutputFilePathProvider;
         }
 
         public async Task<ProjectFile> DeserializeAsync(string projectFilePath)
         {
+            // Get the program message sink (root functionality message sink).
             var messageSink = await this.MessageSinkProvider.GetMessageSinkAsync();
 
-            var messagesOutputFilePath = await this.VisualStudioProjectFileSerializerMessagesOutputFilePathProvider.GetVisualStudioProjectFileSerializerMessagesOutputFilePathAsync(
-                Constants.ProjectFileDeserializationFunctionalityName,
-                projectFilePath);
-
-            var fileFormattedMessageSink = new FileFormattedMessageSink(this.StringlyTypedPathOperator, messagesOutputFilePath);
-
-            var messageRepository = new CompositeMessageSink(this.MessageFormatter, new[] { messageSink }, new[] { fileFormattedMessageSink });
-
-            await messageRepository.AddOutputMessageAsync(this.NowUtcProvider, $"Deserialization of:\n{projectFilePath}");
-
-            var projectFile = await this.FunctionalVisualStudioProjectFileSerializer.DeserializeAsync(projectFilePath, messageRepository);
+            var projectFile = await this.FunctionalVisualStudioProjectFileSerializer.DeserializeAsync(projectFilePath, messageSink);
             return projectFile;
         }
 
         public async Task SerializeAsync(string projectFilePath, ProjectFile value, bool overwrite = true)
         {
+            // Get the program message sink (root functionality message sink).
             var messageSink = await this.MessageSinkProvider.GetMessageSinkAsync();
 
-            var messagesOutputFilePath = await this.VisualStudioProjectFileSerializerMessagesOutputFilePathProvider.GetVisualStudioProjectFileSerializerMessagesOutputFilePathAsync(
-                Constants.ProjectFileSerializationFunctionalityName,
-                projectFilePath);
-
-            var fileFormattedMessageSink = new FileFormattedMessageSink(this.StringlyTypedPathOperator, messagesOutputFilePath);
-
-            var messageRepository = new CompositeMessageSink(this.MessageFormatter, new[] { messageSink }, new[] { fileFormattedMessageSink });
-
-            await messageRepository.AddOutputMessageAsync(this.NowUtcProvider, $"Serialization of:\n{projectFilePath}");
-
-            await this.FunctionalVisualStudioProjectFileSerializer.SerializeAsync(projectFilePath, value, messageRepository, overwrite);
+            await this.FunctionalVisualStudioProjectFileSerializer.SerializeAsync(projectFilePath, value, messageSink, overwrite);
         }
     }
 }

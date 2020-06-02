@@ -17,6 +17,7 @@ namespace R5T.Kefalonia.Common
         private IRelativeFilePathsVisualStudioProjectFileSerializer RelativeFilePathsVisualStudioProjectFileSerializer { get; }
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
         private IVisualStudioProjectFileDeserializationSettings VisualStudioProjectFileDeserializationSettings { get; }
+        private IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider VisualStudioProjectFileSerializerMessagesOutputFilePathProvider { get; }
         private IVisualStudioProjectFileValidator VisualStudioProjectFileValidator { get; }
 
 
@@ -26,6 +27,7 @@ namespace R5T.Kefalonia.Common
             IRelativeFilePathsVisualStudioProjectFileSerializer relativeFilePathsVisualStudioProjectFileSerializer,
             IStringlyTypedPathOperator stringlyTypedPathOperator,
             IVisualStudioProjectFileDeserializationSettings visualStudioProjectFileDeserializationSettings,
+            IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider visualStudioProjectFileSerializerMessagesOutputFilePathProvider,
             IVisualStudioProjectFileValidator visualStudioProjectFileValidator)
         {
             this.MessageFormatter = messageFormatter;
@@ -33,15 +35,21 @@ namespace R5T.Kefalonia.Common
             this.RelativeFilePathsVisualStudioProjectFileSerializer = relativeFilePathsVisualStudioProjectFileSerializer;
             this.StringlyTypedPathOperator = stringlyTypedPathOperator;
             this.VisualStudioProjectFileDeserializationSettings = visualStudioProjectFileDeserializationSettings;
+            this.VisualStudioProjectFileSerializerMessagesOutputFilePathProvider = visualStudioProjectFileSerializerMessagesOutputFilePathProvider;
             this.VisualStudioProjectFileValidator = visualStudioProjectFileValidator;
         }
 
         public async Task<ProjectFile> DeserializeAsync(string projectFilePath, IMessageSink messageSink)
         {
+            // Create a message repository that can be used to test if there were any errors.
             var messageRepository = new InMemoryMessageRepository();
 
-            var compositeMessageSink = new CompositeMessageSink(this.MessageFormatter, new[] { messageSink, messageRepository });
+            var compositeMessageSink = await this.CreateCompositeMessageSinkAsync(projectFilePath, messageSink, messageRepository, Constants.ProjectFileDeserializationFunctionalityName);
 
+            // Test message output.
+            await compositeMessageSink.AddOutputMessageAsync(this.NowUtcProvider, $"Deserialization of:\n{projectFilePath}");
+
+            // Now deserialize.
             var projectFile = await this.RelativeFilePathsVisualStudioProjectFileSerializer.Deserialize(projectFilePath, compositeMessageSink);
 
             // Change all project reference paths to be absolute, not relative, using the input project file path.
@@ -52,20 +60,8 @@ namespace R5T.Kefalonia.Common
                 projectReference.ProjectFilePath = projectReferenceAbsolutePath;
             }
 
-            // Validates the project file.
-            var isValidProjectFile = await this.VisualStudioProjectFileValidator.Validate(projectFile, compositeMessageSink);
-            if(!isValidProjectFile)
-            {
-                var timestampUtc = await this.NowUtcProvider.GetNowUtcAsync();
-                await messageRepository.AddErrorMessageAsync(timestampUtc, "Project file invalid.");
-
-                if(this.VisualStudioProjectFileDeserializationSettings.ThrowIfInvalidProjectFile)
-                {
-                    throw new Exception("Invalid project file.");
-                }
-            }
-
-            // Output any result output messages or error messages.
+            // Validate the project file.
+            await this.ValidateProjectFileAsync(projectFile, compositeMessageSink);
 
             // If there are any error messages, and the deserializations settings say we should throw if there are any error messages, throw an exception.
             var errorMessages = await messageRepository.GetErrorsAsync();
@@ -73,16 +69,67 @@ namespace R5T.Kefalonia.Common
             {
                 if (this.VisualStudioProjectFileDeserializationSettings.ThrowIfAnyErrorAtEnd)
                 {
-                    throw new Exception("There were deserialization errors.\nSee result messages.");
+                    var messagesOutputFilePath = await this.GetMessagesOutputFilePathAsync(Constants.ProjectFileDeserializationFunctionalityName, projectFilePath);
+
+                    throw new Exception($"There were deserialization errors. See:\n{messagesOutputFilePath}");
                 }
             }
 
             return projectFile;
         }
 
-        public Task SerializeAsync(string projectFilePath, ProjectFile projectFile, IMessageSink messageSink, bool overwrite = true)
+        private async Task<string> GetMessagesOutputFilePathAsync(string functionalityName, string projectFilePath)
         {
-            return this.RelativeFilePathsVisualStudioProjectFileSerializer.Serialize(projectFilePath, projectFile, messageSink, overwrite);
+            var messagesOutputFilePath = await this.VisualStudioProjectFileSerializerMessagesOutputFilePathProvider.GetVisualStudioProjectFileSerializerMessagesOutputFilePathAsync(
+                functionalityName,
+                projectFilePath);
+
+            return messagesOutputFilePath;
+        }
+
+        private async Task<IMessageSink> CreateCompositeMessageSinkAsync(string projectFilePath, IMessageSink parentMessageSink, InMemoryMessageRepository inMemoryMessageRepository, string functionalityName)
+        {
+            // Now create the messages output file sink for this functionality.
+            var messagesOutputFilePath = await this.GetMessagesOutputFilePathAsync(functionalityName, projectFilePath);
+
+            var fileFormattedMessageSink = new FileFormattedMessageSink(this.StringlyTypedPathOperator, messagesOutputFilePath);
+
+            // Create composite message sink for all sub-functionality to use, including 1) the parent functionality's message sink, the message repository for use in determining if there were any errors, and the file message sink for persistence of messages from this functionality.
+            var compositeMessageSink = new CompositeMessageSink(this.MessageFormatter, new[] { parentMessageSink, inMemoryMessageRepository }, new[] { fileFormattedMessageSink });
+            return compositeMessageSink;
+        }
+
+        private async Task ValidateProjectFileAsync(ProjectFile projectFile, IMessageSink messageSink)
+        {
+            var isValidProjectFile = await this.VisualStudioProjectFileValidator.Validate(projectFile, messageSink);
+            if (!isValidProjectFile)
+            {
+                var timestampUtc = await this.NowUtcProvider.GetNowUtcAsync();
+                await messageSink.AddErrorMessageAsync(timestampUtc, "Project file invalid.");
+
+                if (this.VisualStudioProjectFileDeserializationSettings.ThrowIfInvalidProjectFile)
+                {
+                    throw new Exception("Invalid project file.");
+                }
+            }
+        }
+
+        public async Task SerializeAsync(string projectFilePath, ProjectFile projectFile, IMessageSink messageSink, bool overwrite = true)
+        {
+            // Create a message repository that can be used to test if there were any errors.
+            var messageRepository = new InMemoryMessageRepository();
+
+            var compositeMessageSink = await this.CreateCompositeMessageSinkAsync(projectFilePath, messageSink, messageRepository, Constants.ProjectFileSerializationFunctionalityName);
+
+            // Test message output.
+            await compositeMessageSink.AddOutputMessageAsync(this.NowUtcProvider, $"Serialization of:\n{projectFilePath}");
+
+            // Validate project file.
+            await this.ValidateProjectFileAsync(projectFile, messageSink);
+            
+            await this.RelativeFilePathsVisualStudioProjectFileSerializer.Serialize(projectFilePath, projectFile, compositeMessageSink, overwrite);
+
+            // Any errors?
         }
     }
 }

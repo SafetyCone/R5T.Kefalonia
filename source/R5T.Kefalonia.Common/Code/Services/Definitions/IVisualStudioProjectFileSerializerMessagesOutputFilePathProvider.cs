@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 
-namespace R5T.Kefalonia.Construction
+namespace R5T.Kefalonia.Common
 {
     public interface IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider
     {

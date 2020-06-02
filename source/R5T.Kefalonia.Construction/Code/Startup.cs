@@ -160,17 +160,6 @@ namespace R5T.Kefalonia.Construction
             });
 
             // 3
-            IServiceAction<IFunctionalVisualStudioProjectFileSerializer> functionalVisualStudioProjectFileSerializerAction = ServiceAction<IFunctionalVisualStudioProjectFileSerializer>.New((serviceCollection) =>
-            {
-                serviceCollection
-                    .AddSingleton<IFunctionalVisualStudioProjectFileSerializer, FunctionalVisualStudioProjectFileSerializer>()
-                    .Run(nowUtcProviderAction)
-                    .Run(relativeFilePathsVisualStudioProjectFileSerializerAction)
-                    .Run(stringlyTypedPathOperatorAction)
-                    .Run(visualStudioProjectFileDeserializationSettingsAction)
-                    .Run(visualStudioProjectFileValidatorAction)
-                    ;
-            });
             IServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider> programNameStartTimeMessagesOutputDirectoryPathProviderAction =
                 isConstruction
                 ? ServiceAction<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider>.New(serviceCollection =>
@@ -215,6 +204,20 @@ namespace R5T.Kefalonia.Construction
             });
 
             // 6
+            IServiceAction<IFunctionalVisualStudioProjectFileSerializer> functionalVisualStudioProjectFileSerializerAction = ServiceAction<IFunctionalVisualStudioProjectFileSerializer>.New((serviceCollection) =>
+            {
+                serviceCollection
+                    .AddSingleton<IFunctionalVisualStudioProjectFileSerializer, FunctionalVisualStudioProjectFileSerializer>()
+                    .Run(nowUtcProviderAction)
+                    .Run(relativeFilePathsVisualStudioProjectFileSerializerAction)
+                    .Run(stringlyTypedPathOperatorAction)
+                    .Run(visualStudioProjectFileDeserializationSettingsAction)
+                    .Run(visualStudioProjectFileSerializerMessagesOutputFilePathProviderAction)
+                    .Run(visualStudioProjectFileValidatorAction)
+                    ;
+            });
+
+            // 7
             IServiceAction<IVisualStudioProjectFileSerializer> visualStudioProjectFileSerializerAction = ServiceAction<IVisualStudioProjectFileSerializer>.New((serviceCollection) =>
             {
                 serviceCollection
@@ -223,7 +226,6 @@ namespace R5T.Kefalonia.Construction
                     .Run(messageFormatterAction)
                     .Run(nowUtcProviderAction)
                     .Run(stringlyTypedPathOperatorAction)
-                    .Run(visualStudioProjectFileSerializerMessagesOutputFilePathProviderAction)
                     ;
             });
 

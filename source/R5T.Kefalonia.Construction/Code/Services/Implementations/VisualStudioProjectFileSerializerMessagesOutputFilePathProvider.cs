@@ -5,6 +5,8 @@ using R5T.D0006;
 
 using R5T.Lombardy;
 
+using R5T.Kefalonia.Common;
+
 
 namespace R5T.Kefalonia.Construction
 {
