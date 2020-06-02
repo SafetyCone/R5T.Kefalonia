@@ -36,7 +36,7 @@ namespace R5T.Kefalonia.Construction
 
             var projectFileDeserializationMessagesOutputFileNameWithoutExtension = $"{fileNameWithoutExtension}_{guid.ToStringStandard()}";
 
-            var outputFileExtension = "output";
+            var outputFileExtension = Constants.OutputFileExtension;
 
             var projectFileDeserializationMessagesOutputFileName = this.FileNameOperator.GetFileName(projectFileDeserializationMessagesOutputFileNameWithoutExtension, outputFileExtension);
             return projectFileDeserializationMessagesOutputFileName;

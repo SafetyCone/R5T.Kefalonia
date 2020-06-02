@@ -8,14 +8,14 @@ using R5T.Lombardy;
 
 namespace R5T.Kefalonia.Construction
 {
-    class MessagesOutputFilePathProvider
+    class VisualStudioProjectFileSerializerMessagesOutputFilePathProvider : IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider
     {
         private IProjectFileDeserializationMessagesOutputFileNameProvider ProjectFileDeserializationMessagesOutputFileNameProvider { get; }
         private IFunctionalitySpecificMessagesOutputDirectoryPathProvider FunctionalitySpecificMessagesOutputDirectoryPathProvider { get; }
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
 
 
-        public MessagesOutputFilePathProvider(
+        public VisualStudioProjectFileSerializerMessagesOutputFilePathProvider(
             IProjectFileDeserializationMessagesOutputFileNameProvider projectFileDeserializationMessagesOutputFileNameProvider,
             IFunctionalitySpecificMessagesOutputDirectoryPathProvider functionalitySpecificMessagesOutputDirectoryPathProvider,
             IStringlyTypedPathOperator stringlyTypedPathOperator)
@@ -25,7 +25,7 @@ namespace R5T.Kefalonia.Construction
             this.StringlyTypedPathOperator = stringlyTypedPathOperator;
         }
 
-        public async Task<string> GetMessagesOutputFilePathAsync(string functionalityName, string projectFilePath)
+        public async Task<string> GetVisualStudioProjectFileSerializerMessagesOutputFilePathAsync(string functionalityName, string projectFilePath)
         {
             var gettingMessagesOutputDirectoryPath = this.FunctionalitySpecificMessagesOutputDirectoryPathProvider.GetFunctionalitySpecificMessagesOutputDirectoryPath(
                 functionalityName);

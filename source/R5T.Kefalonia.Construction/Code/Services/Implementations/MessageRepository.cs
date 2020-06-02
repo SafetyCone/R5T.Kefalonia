@@ -11,29 +11,24 @@ using R5T.Lombardy;
 using R5T.Magyar.Extensions;
 using R5T.Magyar.IO;
 
+using R5T.Kefalonia.Common;
+
 
 namespace R5T.Kefalonia.Construction
 {
     public class MessageRepository : IMessageRepository
     {
-        #region Static
-
-        public static string FormatMessage(Message message)
-        {
-            var formattedMessage = $"{message.TimestampUtc.ToYYYYMMDD_HHMMSS_FFF()} - {message.MessageType}:\n{message.Value}";
-            return formattedMessage;
-        }
-
-        #endregion
-
+        private IMessageFormatter MessageFormatter { get; }
 
         private string MessagesOutputFilePath { get; }
 
         private List<Message> InMemorySink { get; } = new List<Message>();
 
 
-        public MessageRepository(IStringlyTypedPathOperator stringlyTypedPathOperator, string messagesOutputFilePath)
+        public MessageRepository(IMessageFormatter messageFormatter, IStringlyTypedPathOperator stringlyTypedPathOperator, string messagesOutputFilePath)
         {
+            this.MessageFormatter = messageFormatter;
+
             // Create the directory if it does not exist.
             var messagesOutputDirectoryPath = stringlyTypedPathOperator.GetDirectoryPathForFilePath(messagesOutputFilePath);
 
@@ -47,7 +42,7 @@ namespace R5T.Kefalonia.Construction
 
         public async Task AddAsync(Message message)
         {
-            var formattedMessage = MessageRepository.FormatMessage(message);
+            var formattedMessage = await this.MessageFormatter.FormatAsync(message);
 
             // Add to console sink.
             Console.WriteLine(formattedMessage);
@@ -72,7 +67,7 @@ namespace R5T.Kefalonia.Construction
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<Message>> GetAllAsync(Func<Message, bool> predicate)
+        public Task<IEnumerable<Message>> GetAsync(Func<Message, bool> predicate)
         {
             var messages = this.InMemorySink
                 .Where(predicate);

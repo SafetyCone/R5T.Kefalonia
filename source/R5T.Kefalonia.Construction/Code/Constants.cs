@@ -8,5 +8,7 @@ namespace R5T.Kefalonia.Construction
         public const string MessagesOutputDirectoryName = "Messages Output";
         public const string ProjectFileDeserializationFunctionalityName = "Deserialization-Project File";
         public const string ProjectFileSerializationFunctionalityName = "Serialization-Project File";
+
+        public const string OutputFileExtension = "output";
     }
 }

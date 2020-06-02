@@ -23,9 +23,10 @@ namespace R5T.Kefalonia.Construction
         public Task<string> GetProjectFileDeserializationMessagesOutputFileNameAsync(string projectFilePath)
         {
             var fileNameWithoutExtension = this.StringlyTypedPathOperator.GetFileNameWithoutExtension(projectFilePath);
-            var outputFileExtension = "output";
+            var outputFileExtension = Constants.OutputFileExtension;
 
             var projectFileDeserializationMessagesOutputFileName = this.FileNameOperator.GetFileName(fileNameWithoutExtension, outputFileExtension);
+
             return Task.FromResult(projectFileDeserializationMessagesOutputFileName);
         }
     }

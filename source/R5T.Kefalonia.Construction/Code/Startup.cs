@@ -16,6 +16,7 @@ using R5T.D0007;
 using R5T.D0007.Standard;
 using R5T.D0008;
 using R5T.D0008.Standard;
+using R5T.D0010;
 using R5T.D0011;
 using R5T.D0011.Standard;
 using R5T.D0012;
@@ -56,6 +57,23 @@ namespace R5T.Kefalonia.Construction
             // 0
             IServiceAction<FunctionalityDirectoryNameProvider> functionalityDirectoryNameProviderAction = ServiceAction<FunctionalityDirectoryNameProvider>.New(() => services.AddSingleton<FunctionalityDirectoryNameProvider>());
             IServiceAction<IGuidProvider> guidProviderAction = services.AddGuidProviderAction();
+            IServiceAction<IMessageFormatter> messageFormatterAction = ServiceAction<IMessageFormatter>.New(serviceCollection =>
+            {
+                serviceCollection
+                    .AddSingleton<IMessageFormatter, DefaultMessageFormatter>()
+                    ;
+            });
+            //IServiceAction<IMessageRepository> messageRepositoryAction = ServiceAction<IMessageRepository>.New(serviceCollection => serviceCollection.AddSingleton<IMessageRepository, InMemoryMessageRepository>()); // Adds the default in-memory message repository.
+            //IServiceAction<IMessageSink> messageSinkAction = ServiceAction<IMessageSink>.New(
+            //    serviceCollection => serviceCollection.AddSingleton<IMessageSink>(
+            //        serviceProvider =>
+            //        {
+            //            var programStartTimeSpecificMessagesOutputDirectoryPathProvider = serviceProvider.GetRequiredService<IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider>();
+            //            var programStartTimeSpecificMessagesOutputDirectoryPath = programStartTimeSpecificMessagesOutputDirectoryPathProvider.GetProgramStartTimeSpecificMessagesOutputDirectoryPathAsync().Result;
+
+            //            var stringlyTypedPathOperator = serviceProvider
+            //        })); // No async Add() methods allowed!
+            IServiceAction<IMessageSinkProvider> messageSinkProviderAction = ServiceAction<IMessageSinkProvider>.New(() => services.AddSingleton<IMessageSinkProvider, DefaultMessageSinkProvider>()); // One message sink provider for the whole application.
             IServiceAction<INowUtcProvider> nowUtcProviderAction = services.AddNowUtcProviderAction();
             IServiceAction<IProcessStartTimeUtcProvider> processStartTimeProviderAction = services.AddProcessStartTimeUtcProviderAction();
             IServiceAction<IProgramNameProvider> programNameProviderAction = services.AddProgramNameProviderAction();
@@ -68,7 +86,7 @@ namespace R5T.Kefalonia.Construction
                     .AddVisualStudioProjectFileDeserializationSettings(settings =>
                     {
                         settings.ThrowAtErrorOccurrence = false;
-                        settings.ThrowIfAnyErrorAtEnd = false;
+                        settings.ThrowIfAnyErrorAtEnd = true;
                         settings.ThrowIfInvalidProjectFile = false;
                     });
             });
@@ -186,10 +204,10 @@ namespace R5T.Kefalonia.Construction
             });
 
             // 5
-            IServiceAction<MessagesOutputFilePathProvider> messagesOutputFilePathProviderAction = ServiceAction<MessagesOutputFilePathProvider>.New((serviceCollection) =>
+            IServiceAction<IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider> visualStudioProjectFileSerializerMessagesOutputFilePathProviderAction = ServiceAction<IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider>.New((serviceCollection) =>
             {
                 serviceCollection
-                    .AddSingleton<MessagesOutputFilePathProvider>()
+                    .AddSingleton<IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider, VisualStudioProjectFileSerializerMessagesOutputFilePathProvider>()
                     .Run(projectFileDeserializationMessagesOutputFileNameProviderAction)
                     .Run(programNameStartTimeFunctionalityMessagesOutputDirectoryPathProviderAction)
                     .Run(stringlyTypedPathOperatorAction)
@@ -202,8 +220,10 @@ namespace R5T.Kefalonia.Construction
                 serviceCollection
                     .AddSingleton<IVisualStudioProjectFileSerializer, VisualStudioProjectFileSerializer>()
                     .Run(functionalVisualStudioProjectFileSerializerAction)
-                    .Run(messagesOutputFilePathProviderAction)
+                    .Run(messageFormatterAction)
+                    .Run(nowUtcProviderAction)
                     .Run(stringlyTypedPathOperatorAction)
+                    .Run(visualStudioProjectFileSerializerMessagesOutputFilePathProviderAction)
                     ;
             });
 
@@ -213,7 +233,8 @@ namespace R5T.Kefalonia.Construction
                 .Run(functionalVisualStudioProjectFileSerializerAction)
                 .Run(guidProviderAction)
                 .Run(messagesOutputBaseDirectoryPathProviderAction)
-                .Run(messagesOutputFilePathProviderAction)
+                .Run(messageFormatterAction)
+                .Run(messageSinkProviderAction)
                 .Run(nowUtcProviderAction)
                 .Run(processStartTimeUtcDirectoryNameProviderAction)
                 .Run(processStartTimeProviderAction)
@@ -228,6 +249,7 @@ namespace R5T.Kefalonia.Construction
                 .Run(testingDataDirectoryContentPathsProviderAction)
                 .Run(timestampUtcDirectoryNameProviderAction)
                 .Run(visualStudioProjectFileSerializerAction)
+                .Run(visualStudioProjectFileSerializerMessagesOutputFilePathProviderAction)
                 .Run(visualStudioProjectFileToXElementConverter)
                 .Run(visualStudioProjectFileDeserializationSettingsAction)
                 .Run(visualStudioProjectFileValidatorAction)

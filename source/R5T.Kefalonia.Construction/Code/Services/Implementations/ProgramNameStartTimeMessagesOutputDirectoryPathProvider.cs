@@ -26,7 +26,7 @@ namespace R5T.Kefalonia.Construction
             this.StringlyTypedPathOperator = stringlyTypedPathOperator;
         }
 
-        public async Task<string> GetProgramStartTimeSpecificMessagesOutputDirectoryPath()
+        public async Task<string> GetProgramStartTimeSpecificMessagesOutputDirectoryPathAsync()
         {
             var gettingProcessStartTimeUtcDirectoryName = this.ProcessStartTimeUtcDirectoryNameProvider.GetProcessStartTimeUtcDirectoryNameAsync();
             var gettingProgramSpecificMessagesOutputDirectoryPath = this.ProgramSpecificMessagesOutputDirectoryPathProvider.GetProgramSpecificMessagesOutputDirectoryPath();

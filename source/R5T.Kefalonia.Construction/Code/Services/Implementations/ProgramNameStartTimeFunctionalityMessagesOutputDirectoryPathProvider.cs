@@ -31,7 +31,7 @@ namespace R5T.Kefalonia.Construction
 
         public async Task<string> GetFunctionalitySpecificMessagesOutputDirectoryPath(string functionalityName)
         {
-            var gettingProgramNameStartTimeMessagesOutputDirectoryPath = this.ProgramStartTimeSpecificMessagesOutputDirectoryPathProvider.GetProgramStartTimeSpecificMessagesOutputDirectoryPath();
+            var gettingProgramNameStartTimeMessagesOutputDirectoryPath = this.ProgramStartTimeSpecificMessagesOutputDirectoryPathProvider.GetProgramStartTimeSpecificMessagesOutputDirectoryPathAsync();
             var gettingFunctionalityDirectoryName = this.FunctionalityDirectoryNameProvider.GetFunctionalityDirectoryNameAsync(functionalityName);
 
             await Task.WhenAll(
