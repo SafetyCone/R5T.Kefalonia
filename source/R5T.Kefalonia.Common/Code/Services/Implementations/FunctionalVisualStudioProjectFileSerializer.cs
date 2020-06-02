@@ -12,6 +12,7 @@ namespace R5T.Kefalonia.Common
 {
     public class FunctionalVisualStudioProjectFileSerializer : IFunctionalVisualStudioProjectFileSerializer
     {
+        private IMessageFormatter MessageFormatter { get; }
         private INowUtcProvider NowUtcProvider { get; }
         private IRelativeFilePathsVisualStudioProjectFileSerializer RelativeFilePathsVisualStudioProjectFileSerializer { get; }
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
@@ -20,21 +21,28 @@ namespace R5T.Kefalonia.Common
 
 
         public FunctionalVisualStudioProjectFileSerializer(
+            IMessageFormatter messageFormatter,
             INowUtcProvider nowUtcProvider,
             IRelativeFilePathsVisualStudioProjectFileSerializer relativeFilePathsVisualStudioProjectFileSerializer,
             IStringlyTypedPathOperator stringlyTypedPathOperator,
             IVisualStudioProjectFileDeserializationSettings visualStudioProjectFileDeserializationSettings,
             IVisualStudioProjectFileValidator visualStudioProjectFileValidator)
         {
+            this.MessageFormatter = messageFormatter;
+            this.NowUtcProvider = nowUtcProvider;
             this.RelativeFilePathsVisualStudioProjectFileSerializer = relativeFilePathsVisualStudioProjectFileSerializer;
             this.StringlyTypedPathOperator = stringlyTypedPathOperator;
             this.VisualStudioProjectFileDeserializationSettings = visualStudioProjectFileDeserializationSettings;
             this.VisualStudioProjectFileValidator = visualStudioProjectFileValidator;
         }
 
-        public async Task<ProjectFile> DeserializeAsync(string projectFilePath, IMessageRepository messageRepository)
+        public async Task<ProjectFile> DeserializeAsync(string projectFilePath, IMessageSink messageSink)
         {
-            var projectFile = await this.RelativeFilePathsVisualStudioProjectFileSerializer.Deserialize(projectFilePath, messageRepository);
+            var messageRepository = new InMemoryMessageRepository();
+
+            var compositeMessageSink = new CompositeMessageSink(this.MessageFormatter, new[] { messageSink, messageRepository });
+
+            var projectFile = await this.RelativeFilePathsVisualStudioProjectFileSerializer.Deserialize(projectFilePath, compositeMessageSink);
 
             // Change all project reference paths to be absolute, not relative, using the input project file path.
             foreach (var projectReference in projectFile.ProjectReferences)
@@ -45,7 +53,7 @@ namespace R5T.Kefalonia.Common
             }
 
             // Validates the project file.
-            var isValidProjectFile = await this.VisualStudioProjectFileValidator.Validate(projectFile, messageRepository);
+            var isValidProjectFile = await this.VisualStudioProjectFileValidator.Validate(projectFile, compositeMessageSink);
             if(!isValidProjectFile)
             {
                 var timestampUtc = await this.NowUtcProvider.GetNowUtcAsync();
@@ -72,9 +80,9 @@ namespace R5T.Kefalonia.Common
             return projectFile;
         }
 
-        public Task SerializeAsync(string projectFilePath, ProjectFile projectFile, IMessageRepository messageRepository, bool overwrite = true)
+        public Task SerializeAsync(string projectFilePath, ProjectFile projectFile, IMessageSink messageSink, bool overwrite = true)
         {
-            return this.RelativeFilePathsVisualStudioProjectFileSerializer.Serialize(projectFilePath, projectFile, messageRepository, overwrite);
+            return this.RelativeFilePathsVisualStudioProjectFileSerializer.Serialize(projectFilePath, projectFile, messageSink, overwrite);
         }
     }
 }

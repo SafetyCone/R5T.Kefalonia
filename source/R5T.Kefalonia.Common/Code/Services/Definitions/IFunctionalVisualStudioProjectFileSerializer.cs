@@ -15,7 +15,7 @@ namespace R5T.Kefalonia.Common
     /// </summary>
     public interface IFunctionalVisualStudioProjectFileSerializer
     {
-        Task<ProjectFile> DeserializeAsync(string projectFilePath, IMessageRepository messageRepository);
-        Task SerializeAsync(string filePath, ProjectFile value, IMessageRepository messageRepository, bool overwrite = true);
+        Task<ProjectFile> DeserializeAsync(string projectFilePath, IMessageSink messageSink);
+        Task SerializeAsync(string filePath, ProjectFile value, IMessageSink messageSink, bool overwrite = true);
     }
 }
