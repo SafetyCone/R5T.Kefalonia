@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -8,6 +11,7 @@ using R5T.Lombardy;
 using R5T.Magyar.IO;
 
 using R5T.Kefalonia.Common;
+using R5T.VisualStudioProjectFileStuff;
 
 
 namespace R5T.Kefalonia.XElements
@@ -40,10 +44,68 @@ namespace R5T.Kefalonia.XElements
         {
             var projectXElement = await this.VisualStudioProjectFileToXElementConverter.ToProjectXElement(projectFile, messageSink);
 
-            using (var fileStream = FileStreamHelper.NewWrite(filePath, overwrite))
-            using (var xmlWriter = XmlWriterHelper.New(fileStream))
+            // Use a StringWriter and adjust the string to have the desired extra line breaks before serialization.
+            using (var fileStream = FileStreamHelper.NewWrite(filePath, overwrite)) // I want to use this overwrite logic.
+            using (var stringWriter = new StringWriter())
             {
-                projectXElement.Value.Save(xmlWriter); // No async version.
+                using (var xmlWriter = XmlWriterHelper.New(stringWriter))
+                {
+                    projectXElement.Value.WriteTo(xmlWriter); // No async version.
+                }
+
+                var text = stringWriter.ToString();
+
+                var prefixNewLineMatchPatterns = new[]
+                {
+                    $@"^\s*<{ProjectFileXmlElementName.ItemGroup}>",
+                    $@"^\s*<{ProjectFileXmlElementName.PropertyGroup}>",
+                    $@"^\s*</{ProjectFileXmlElementName.Project}>",
+                };
+
+                // Very inefficent! Should be able to regex inside a StringBuilder!
+                var modifiedText = text;
+
+                foreach(var prefixNewLineMatchPattern in prefixNewLineMatchPatterns)
+                {
+                    var matches = Regex.Matches(modifiedText, prefixNewLineMatchPattern, RegexOptions.Multiline);
+                    var numberOfMatches = matches.Count;
+
+                    var substrings = new string[numberOfMatches]; // Not +1 since we will deal with the last sub-string separately.
+
+                    var startIndex = 0;
+                    for (int iMatch = 0; iMatch < numberOfMatches; iMatch++)
+                    {
+                        var match = matches[iMatch];
+
+                        var substring = modifiedText.Substring(startIndex, match.Index);
+                        substrings[iMatch] = substring;
+                    }
+
+                    var lastMatch = matches[numberOfMatches - 1];
+                    var lastSubstring = lastMatch.Index + lastMatch.Length == modifiedText.Length + 1 ? String.Empty : modifiedText.Substring(lastMatch.Index + lastMatch.Length);
+
+                    var stringBuilder = new StringBuilder();
+
+                    for (int iMatch = 0; iMatch < numberOfMatches; iMatch++)
+                    {
+                        var substring = substrings[iMatch];
+                        var match = matches[iMatch];
+
+                        var replacement = "\r\n" + match.Value;
+
+                        stringBuilder.Append(substring);
+                        stringBuilder.Append(replacement);
+                    }
+
+                    stringBuilder.Append(lastSubstring);
+
+                    modifiedText = stringBuilder.ToString();
+                }
+
+                using (var textWriter = new StreamWriter(fileStream))
+                {
+                    await textWriter.WriteAsync(modifiedText);
+                }
             }
         }
     }

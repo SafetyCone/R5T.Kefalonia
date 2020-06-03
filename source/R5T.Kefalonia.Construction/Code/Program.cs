@@ -1,11 +1,16 @@
 ﻿using System;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using Microsoft.Extensions.Hosting;
 
 using R5T.Chalandri;
 using R5T.Evosmos;
 using R5T.Liverpool;
+using R5T.Magyar.Extensions;
+using R5T.Magyar.IO;
 
 
 namespace R5T.Kefalonia.Construction
@@ -37,9 +42,48 @@ namespace R5T.Kefalonia.Construction
         protected override async Task SubMainAsync()
         {
             await this.DeserializeExampleProjectFile();
+            //await this.TestXmlWriter();
         }
 
-        //private async Task DeserializeAllProjectFilesIn
+        private Task TestXmlWriter()
+        {
+            var projectFilePath = this.TestingDataDirectoryContentPathsProvider.GetExampleVisualStudioProjectFilePath01();
+            var outputProjectFilePath = this.TemporaryDirectoryFilePathProvider.GetTemporaryDirectoryFilePath("ProjectFile01.csproj");
+
+            var xElement = XElement.Load(projectFilePath); // No async version.
+
+            //using (var writer = new StreamWriter(outputProjectFilePath))
+            //using (var customXmlWriter = new CustomXmlWriter(writer))
+            //using (var xmlWriter = XmlWriterHelper.New(outputProjectFilePath))
+            //using (var customXmlWriter = new CustomXmlWriter(xmlWriter))
+            using (var stringWriter = new StringWriter())
+            {
+                using (var xmlWriter = XmlWriterHelper.New(stringWriter))
+                {
+                    //writer.AutoFlush = true;
+
+                    xElement.Save(xmlWriter);
+                    //xElement.Save(customXmlWriter);
+                }
+
+                var text = stringWriter.ToString();
+
+                var matches = Regex.Matches(text, @"^\s*<ItemGroup>", RegexOptions.Multiline);
+                foreach (Match match in matches)
+                {
+                    var prefix = text.Substring(0, match.Index);
+                    var replacement = "\n" + match.Value;
+                    var suffix = text.Substring(match.Index + match.Length);
+
+                    var newText = prefix + replacement + suffix;
+                    text = newText;
+                }
+
+                File.WriteAllText(outputProjectFilePath, text);
+            }
+
+            return Task.CompletedTask;
+        }
 
         private async Task DeserializeExampleProjectFile()
         {
