@@ -4,11 +4,14 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using R5T.Chalandri;
 using R5T.Evosmos;
+using R5T.Glenrothes;
 using R5T.Liverpool;
+using R5T.Lombardy;
 using R5T.Magyar.Extensions;
 using R5T.Magyar.IO;
 
@@ -23,17 +26,20 @@ namespace R5T.Kefalonia.Construction
         }
 
 
+        private IServiceProvider ServiceProvider { get; }
         private ITemporaryDirectoryFilePathProvider TemporaryDirectoryFilePathProvider { get; }
         private ITestingDataDirectoryContentPathsProvider TestingDataDirectoryContentPathsProvider { get; }
         private IVisualStudioProjectFileSerializer VisualStudioProjectFileSerializer { get; }
 
 
         public Program(IApplicationLifetime applicationLifetime,
+            IServiceProvider serviceProvider,
             ITemporaryDirectoryFilePathProvider temporaryDirectoryFilePathProvider,
             ITestingDataDirectoryContentPathsProvider testingDataDirectoryContentPathsProvider,
             IVisualStudioProjectFileSerializer visualStudioProjectFileSerializer)
             : base(applicationLifetime)
         {
+            this.ServiceProvider = serviceProvider;
             this.TemporaryDirectoryFilePathProvider = temporaryDirectoryFilePathProvider;
             this.TestingDataDirectoryContentPathsProvider = testingDataDirectoryContentPathsProvider;
             this.VisualStudioProjectFileSerializer = visualStudioProjectFileSerializer;
@@ -41,8 +47,42 @@ namespace R5T.Kefalonia.Construction
 
         protected override async Task SubMainAsync()
         {
-            await this.DeserializeExampleProjectFile();
+            //await this.DeserializeExampleProjectFile();
             //await this.TestXmlWriter();
+            //await this.CompareXElementsUsingDeepEquals();
+            await this.CompareXElementsUsingOrderIndependentEquals();
+        }
+
+        private async Task CompareXElementsUsingOrderIndependentEquals()
+        {
+            var expectedFilePath = this.TestingDataDirectoryContentPathsProvider.GetExampleVisualStudioProjectFilePath01();
+            var actualFilePath = this.TemporaryDirectoryFilePathProvider.GetTemporaryDirectoryFilePath("ProjectFile01.csproj");
+
+            var expectedXElement = XElement.Load(expectedFilePath);
+            var actualXElement = XElement.Load(actualFilePath);
+
+            var orderIndependentXElementEqualityComparer = this.ServiceProvider.GetRequiredService<OrderIndependentXElementEqualityComparer>();
+
+            var shouldBeTrue = await orderIndependentXElementEqualityComparer.AreEqual(expectedXElement, expectedXElement);
+            var shouldBeTrue2 = await orderIndependentXElementEqualityComparer.AreEqual(actualXElement, actualXElement);
+
+            var shouldBeTrue3 = await orderIndependentXElementEqualityComparer.AreEqual(expectedXElement, actualXElement);
+        }
+
+        private async Task CompareXElementsUsingDeepEquals()
+        {
+            var expectedFilePath = this.TestingDataDirectoryContentPathsProvider.GetExampleVisualStudioProjectFilePath01();
+            var actualFilePath = this.TemporaryDirectoryFilePathProvider.GetTemporaryDirectoryFilePath("ProjectFile01.csproj");
+
+            var expectedXElement = XElement.Load(expectedFilePath);
+            var actualXElement = XElement.Load(actualFilePath);
+
+            var deepEqualsXElementEqualityComparer = this.ServiceProvider.GetRequiredService<DeepEqualsXElementEqualityComparer>();
+
+            var shouldBeTrue = await deepEqualsXElementEqualityComparer.AreEqual(expectedXElement, expectedXElement);
+            var shouldBeTrue2 = await deepEqualsXElementEqualityComparer.AreEqual(actualXElement, actualXElement);
+
+            var shouldBeFalse = await deepEqualsXElementEqualityComparer.AreEqual(expectedXElement, actualXElement);
         }
 
         private Task TestXmlWriter()
@@ -91,9 +131,22 @@ namespace R5T.Kefalonia.Construction
 
             var projectFile = await this.VisualStudioProjectFileSerializer.DeserializeAsync(exampleVisualStudioProjectFilePath01);
 
+            var testingDataDirectoryPathProvider = this.ServiceProvider.GetRequiredService<ITestingDataDirectoryPathProvider>();
+
+            var testingDataDirectoryPath = testingDataDirectoryPathProvider.GetTestingDataDirectoryPath();
+
+            var stringlyTypedPathOperator = this.ServiceProvider.GetRequiredService<IStringlyTypedPathOperator>();
+
+            // Serialize to this temporary directory to get the project reference relative file paths correct.
+            var tempOutputFilePath01 = stringlyTypedPathOperator.GetFilePath(testingDataDirectoryPath, "ProjectFile01.csproj");
+            
+            await this.VisualStudioProjectFileSerializer.SerializeAsync(tempOutputFilePath01, projectFile);
+
+            // No move to actual output directory.
             var outputFilePath01 = this.TemporaryDirectoryFilePathProvider.GetTemporaryDirectoryFilePath("ProjectFile01.csproj");
 
-            await this.VisualStudioProjectFileSerializer.SerializeAsync(outputFilePath01, projectFile);
+            FileHelper.DeleteOnlyIfExists(outputFilePath01);
+            File.Move(tempOutputFilePath01, outputFilePath01);
         }
     }
 }

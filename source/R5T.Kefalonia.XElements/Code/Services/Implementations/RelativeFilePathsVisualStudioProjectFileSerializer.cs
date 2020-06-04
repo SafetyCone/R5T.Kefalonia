@@ -44,7 +44,7 @@ namespace R5T.Kefalonia.XElements
         {
             var projectXElement = await this.VisualStudioProjectFileToXElementConverter.ToProjectXElement(projectFile, messageSink);
 
-            // Use a StringWriter and adjust the string to have the desired extra line breaks before serialization.
+            // Save to a StringWriter, then adjust the string to have the desired extra line breaks before serialization.
             using (var fileStream = FileStreamHelper.NewWrite(filePath, overwrite)) // I want to use this overwrite logic.
             using (var stringWriter = new StringWriter())
             {
@@ -62,12 +62,10 @@ namespace R5T.Kefalonia.XElements
                     $@"^\s*</{ProjectFileXmlElementName.Project}>",
                 };
 
-                // Very inefficent! Should be able to regex inside a StringBuilder!
                 var modifiedText = text;
-
                 foreach(var prefixNewLineMatchPattern in prefixNewLineMatchPatterns)
                 {
-                    var matches = Regex.Matches(modifiedText, prefixNewLineMatchPattern, RegexOptions.Multiline);
+                    var matches = Regex.Matches(modifiedText, prefixNewLineMatchPattern, RegexOptions.Multiline); // Include beginning-of-line whitespace.
                     var numberOfMatches = matches.Count;
 
                     var substrings = new string[numberOfMatches]; // Not +1 since we will deal with the last sub-string separately.

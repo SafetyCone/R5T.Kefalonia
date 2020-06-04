@@ -55,6 +55,7 @@ namespace R5T.Kefalonia.Construction
             ) = services.AddStringlyTypedPathRelatedOperatorsAction();
 
             // 0
+            IServiceAction<DeepEqualsXElementEqualityComparer> deepEqualsXElementEqualityComparerAction = ServiceAction<DeepEqualsXElementEqualityComparer>.New(() => services.AddSingleton<DeepEqualsXElementEqualityComparer>());
             IServiceAction<FunctionalityDirectoryNameProvider> functionalityDirectoryNameProviderAction = ServiceAction<FunctionalityDirectoryNameProvider>.New(() => services.AddSingleton<FunctionalityDirectoryNameProvider>());
             IServiceAction<IGuidProvider> guidProviderAction = services.AddGuidProviderAction();
             IServiceAction<IMessageFormatter> messageFormatterAction = ServiceAction<IMessageFormatter>.New(serviceCollection =>
@@ -75,6 +76,7 @@ namespace R5T.Kefalonia.Construction
             //        })); // No async Add() methods allowed!
             IServiceAction<IMessageSinkProvider> messageSinkProviderAction = ServiceAction<IMessageSinkProvider>.New(() => services.AddSingleton<IMessageSinkProvider, DefaultMessageSinkProvider>()); // One message sink provider for the whole application.
             IServiceAction<INowUtcProvider> nowUtcProviderAction = services.AddNowUtcProviderAction();
+            IServiceAction<OrderIndependentXElementEqualityComparer> orderIndependentXElementEqualityComparerAction = ServiceAction<OrderIndependentXElementEqualityComparer>.New(() => services.AddSingleton<OrderIndependentXElementEqualityComparer>());
             IServiceAction<IProcessStartTimeUtcProvider> processStartTimeProviderAction = services.AddProcessStartTimeUtcProviderAction();
             IServiceAction<IProgramNameProvider> programNameProviderAction = services.AddProgramNameProviderAction();
             IServiceAction<ITemporaryDirectoryFilePathProvider> temporaryDirectoryFilePathProviderAction = services.AddTemporaryDirectoryFilePathProviderAction();
@@ -230,6 +232,7 @@ namespace R5T.Kefalonia.Construction
             });
 
             services
+                .Run(deepEqualsXElementEqualityComparerAction)
                 .Run(fileNameOperatorAction)
                 .Run(functionalityDirectoryNameProviderAction)
                 .Run(functionalVisualStudioProjectFileSerializerAction)
@@ -238,6 +241,7 @@ namespace R5T.Kefalonia.Construction
                 .Run(messageFormatterAction)
                 .Run(messageSinkProviderAction)
                 .Run(nowUtcProviderAction)
+                .Run(orderIndependentXElementEqualityComparerAction)
                 .Run(processStartTimeUtcDirectoryNameProviderAction)
                 .Run(processStartTimeProviderAction)
                 .Run(programNameDirectoryNameProviderAction)
