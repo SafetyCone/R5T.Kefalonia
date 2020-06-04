@@ -77,7 +77,7 @@ namespace R5T.Kefalonia.Construction
             IServiceAction<IMessageSinkProvider> messageSinkProviderAction = ServiceAction<IMessageSinkProvider>.New(() => services.AddSingleton<IMessageSinkProvider, DefaultMessageSinkProvider>()); // One message sink provider for the whole application.
             IServiceAction<INowUtcProvider> nowUtcProviderAction = services.AddNowUtcProviderAction();
             IServiceAction<OrderIndependentXElementEqualityComparer> orderIndependentXElementEqualityComparerAction = ServiceAction<OrderIndependentXElementEqualityComparer>.New(() => services.AddSingleton<OrderIndependentXElementEqualityComparer>());
-            IServiceAction<IProcessStartTimeUtcProvider> processStartTimeProviderAction = services.AddProcessStartTimeUtcProviderAction();
+            IServiceAction<IProcessStartTimeUtcProvider> processStartTimeUtcProviderAction = services.AddProcessStartTimeUtcProviderAction();
             IServiceAction<IProgramNameProvider> programNameProviderAction = services.AddProgramNameProviderAction();
             IServiceAction<ITemporaryDirectoryFilePathProvider> temporaryDirectoryFilePathProviderAction = services.AddTemporaryDirectoryFilePathProviderAction();
             IServiceAction<ITestingDataDirectoryContentPathsProvider> testingDataDirectoryContentPathsProviderAction = services.AddTestingDataDirectoryContentPathsProviderAction();
@@ -95,7 +95,7 @@ namespace R5T.Kefalonia.Construction
 
             // 1
             IServiceAction<IProcessStartTimeUtcDirectoryNameProvider> processStartTimeUtcDirectoryNameProviderAction = services.AddProcessStartTimeUtcDirectoryNameProviderAction(
-                processStartTimeProviderAction,
+                processStartTimeUtcProviderAction,
                 timestampUtcDirectoryNameProviderAction);
             IServiceAction<IProgramNameDirectoryNameProvider> programNameDirectoryNameProviderAction = services.AddProgramNameDirectoryNameProviderAction(
                 programNameProviderAction);
@@ -251,7 +251,7 @@ namespace R5T.Kefalonia.Construction
                 .Run(nowUtcProviderAction)
                 .Run(orderIndependentXElementEqualityComparerAction)
                 .Run(processStartTimeUtcDirectoryNameProviderAction)
-                .Run(processStartTimeProviderAction)
+                .Run(processStartTimeUtcProviderAction)
                 .Run(programNameDirectoryNameProviderAction)
                 .Run(programNameProviderAction)
                 .Run(programNameStartTimeMessagesOutputDirectoryPathProviderAction)
