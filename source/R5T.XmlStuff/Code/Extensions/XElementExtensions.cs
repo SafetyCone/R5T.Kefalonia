@@ -67,6 +67,12 @@ namespace R5T.XmlStuff
             return hasChild;
         }
 
+        /// <summary>
+        /// Normalizes an <see cref="XElement"/>.
+        /// </summary>
+        /// <remarks>
+        /// Source: https://weblogs.asp.net/marianor/easy-way-to-compare-two-xmls-for-equality
+        /// </remarks>
         public static XElement Normalize(this XElement xElement)
         {
             if (xElement.HasElements)
