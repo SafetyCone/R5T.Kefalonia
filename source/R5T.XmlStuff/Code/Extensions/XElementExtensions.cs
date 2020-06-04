@@ -66,5 +66,34 @@ namespace R5T.XmlStuff
             var hasChild = xElement.HasChild(childName, out var _);
             return hasChild;
         }
+
+        public static XElement Normalize(this XElement xElement)
+        {
+            if (xElement.HasElements)
+            {
+                return new XElement(
+                    xElement.Name,
+                    xElement.Attributes()
+                        .Where(a => a.Name.Namespace == XNamespace.Xmlns)
+                        .OrderBy(a => a.Name.ToString()),
+                    xElement.Elements()
+                        .OrderBy(a => a.Name.ToString())
+                        .Select(e => e.Normalize()));
+            }
+
+            if (xElement.IsEmpty)
+            {
+                return new XElement(
+                    xElement.Name,
+                    xElement.Attributes()
+                        .OrderBy(a => a.Name.ToString()));
+            }
+
+            return new XElement(
+                xElement.Name,
+                xElement.Attributes()
+                    .OrderBy(a => a.Name.ToString()),
+                xElement.Value);
+        }
     }
 }
