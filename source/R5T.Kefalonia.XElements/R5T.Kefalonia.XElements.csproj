@@ -16,8 +16,4 @@
     <ProjectReference Include="..\R5T.XmlStuff\R5T.XmlStuff.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Code\Classes\" />
-  </ItemGroup>
-
 </Project>
