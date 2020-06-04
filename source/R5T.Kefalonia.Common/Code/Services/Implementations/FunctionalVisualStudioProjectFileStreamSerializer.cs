@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,21 +11,21 @@ using R5T.Lombardy;
 
 namespace R5T.Kefalonia.Common
 {
-    public class FunctionalVisualStudioProjectFileSerializer : IFunctionalVisualStudioProjectFileSerializer
+    public class FunctionalVisualStudioProjectFileStreamSerializer : IFunctionalVisualStudioProjectFileStreamSerializer
     {
         private IMessageFormatter MessageFormatter { get; }
         private INowUtcProvider NowUtcProvider { get; }
-        private IRelativeFilePathsVisualStudioProjectFileSerializer RelativeFilePathsVisualStudioProjectFileSerializer { get; }
+        private IRelativeFilePathsVisualStudioProjectFileStreamSerializer RelativeFilePathsVisualStudioProjectFileSerializer { get; }
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
         private IVisualStudioProjectFileDeserializationSettings VisualStudioProjectFileDeserializationSettings { get; }
         private IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider VisualStudioProjectFileSerializerMessagesOutputFilePathProvider { get; }
         private IVisualStudioProjectFileValidator VisualStudioProjectFileValidator { get; }
 
 
-        public FunctionalVisualStudioProjectFileSerializer(
+        public FunctionalVisualStudioProjectFileStreamSerializer(
             IMessageFormatter messageFormatter,
             INowUtcProvider nowUtcProvider,
-            IRelativeFilePathsVisualStudioProjectFileSerializer relativeFilePathsVisualStudioProjectFileSerializer,
+            IRelativeFilePathsVisualStudioProjectFileStreamSerializer relativeFilePathsVisualStudioProjectFileSerializer,
             IStringlyTypedPathOperator stringlyTypedPathOperator,
             IVisualStudioProjectFileDeserializationSettings visualStudioProjectFileDeserializationSettings,
             IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider visualStudioProjectFileSerializerMessagesOutputFilePathProvider,
@@ -39,7 +40,7 @@ namespace R5T.Kefalonia.Common
             this.VisualStudioProjectFileValidator = visualStudioProjectFileValidator;
         }
 
-        public async Task<ProjectFile> DeserializeAsync(string projectFilePath, IMessageSink messageSink)
+        public async Task<ProjectFile> DeserializeAsync(Stream stream, string projectFilePath, IMessageSink messageSink)
         {
             // Create a message repository that can be used to test if there were any errors.
             var messageRepository = new InMemoryMessageRepository();
@@ -50,7 +51,7 @@ namespace R5T.Kefalonia.Common
             await compositeMessageSink.AddOutputMessageAsync(this.NowUtcProvider, $"Deserialization of:\n{projectFilePath}");
 
             // Now deserialize.
-            var projectFile = await this.RelativeFilePathsVisualStudioProjectFileSerializer.Deserialize(projectFilePath, compositeMessageSink);
+            var projectFile = await this.RelativeFilePathsVisualStudioProjectFileSerializer.Deserialize(stream, compositeMessageSink);
 
             // Change all project reference paths to be absolute, not relative, using the input project file path.
             foreach (var projectReference in projectFile.ProjectReferences)
@@ -114,7 +115,7 @@ namespace R5T.Kefalonia.Common
             }
         }
 
-        public async Task SerializeAsync(string projectFilePath, ProjectFile projectFile, IMessageSink messageSink, bool overwrite = true)
+        public async Task SerializeAsync(Stream stream, string projectFilePath, ProjectFile projectFile, IMessageSink messageSink)
         {
             // Create a message repository that can be used to test if there were any errors.
             var messageRepository = new InMemoryMessageRepository();
@@ -135,7 +136,7 @@ namespace R5T.Kefalonia.Common
             // Validate project file.
             await this.ValidateProjectFileAsync(projectFile, messageSink);
             
-            await this.RelativeFilePathsVisualStudioProjectFileSerializer.Serialize(projectFilePath, projectFile, compositeMessageSink, overwrite);
+            await this.RelativeFilePathsVisualStudioProjectFileSerializer.Serialize(stream, projectFile, compositeMessageSink);
 
             // Any errors?
         }

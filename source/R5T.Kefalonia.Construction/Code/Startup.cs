@@ -152,10 +152,10 @@ namespace R5T.Kefalonia.Construction
                     .Run(stringlyTypedPathOperatorAction)
                     ;
             });
-            IServiceAction<IRelativeFilePathsVisualStudioProjectFileSerializer> relativeFilePathsVisualStudioProjectFileSerializerAction = ServiceAction<IRelativeFilePathsVisualStudioProjectFileSerializer>.New((serviceCollection) =>
+            IServiceAction<IRelativeFilePathsVisualStudioProjectFileStreamSerializer> relativeFilePathsVisualStudioProjectFileSerializerAction = ServiceAction<IRelativeFilePathsVisualStudioProjectFileStreamSerializer>.New((serviceCollection) =>
             {
                 serviceCollection
-                    .AddSingleton<IRelativeFilePathsVisualStudioProjectFileSerializer, RelativeFilePathsVisualStudioProjectFileSerializer>()
+                    .AddSingleton<IRelativeFilePathsVisualStudioProjectFileStreamSerializer, RelativeFilePathsVisualStudioProjectFileStreamSerializer>()
                     .Run(stringlyTypedPathOperatorAction)
                     .Run(visualStudioProjectFileToXElementConverter)
                     ;
@@ -206,10 +206,11 @@ namespace R5T.Kefalonia.Construction
             });
 
             // 6
-            IServiceAction<IFunctionalVisualStudioProjectFileSerializer> functionalVisualStudioProjectFileSerializerAction = ServiceAction<IFunctionalVisualStudioProjectFileSerializer>.New((serviceCollection) =>
+            IServiceAction<IFunctionalVisualStudioProjectFileStreamSerializer> functionalVisualStudioProjectFileSerializerAction = ServiceAction<IFunctionalVisualStudioProjectFileStreamSerializer>.New((serviceCollection) =>
             {
                 serviceCollection
-                    .AddSingleton<IFunctionalVisualStudioProjectFileSerializer, FunctionalVisualStudioProjectFileSerializer>()
+                    .AddSingleton<IFunctionalVisualStudioProjectFileStreamSerializer, FunctionalVisualStudioProjectFileStreamSerializer>()
+                    .Run(messageFormatterAction)
                     .Run(nowUtcProviderAction)
                     .Run(relativeFilePathsVisualStudioProjectFileSerializerAction)
                     .Run(stringlyTypedPathOperatorAction)
@@ -220,14 +221,21 @@ namespace R5T.Kefalonia.Construction
             });
 
             // 7
+            IServiceAction<IVisualStudioProjectFileStreamSerializer> visualStudioProjectFileStreamSerializerAction = ServiceAction<IVisualStudioProjectFileStreamSerializer>.New((serviceCollection) =>
+            {
+                serviceCollection
+                    .AddSingleton<IVisualStudioProjectFileStreamSerializer, VisualStudioProjectFileStreamSerializer>()
+                    .Run(functionalVisualStudioProjectFileSerializerAction)
+                    .Run(messageSinkProviderAction)
+                    ;
+            });
+
+            // 8
             IServiceAction<IVisualStudioProjectFileSerializer> visualStudioProjectFileSerializerAction = ServiceAction<IVisualStudioProjectFileSerializer>.New((serviceCollection) =>
             {
                 serviceCollection
                     .AddSingleton<IVisualStudioProjectFileSerializer, VisualStudioProjectFileSerializer>()
-                    .Run(functionalVisualStudioProjectFileSerializerAction)
-                    .Run(messageFormatterAction)
-                    .Run(nowUtcProviderAction)
-                    .Run(stringlyTypedPathOperatorAction)
+                    .Run(visualStudioProjectFileStreamSerializerAction)
                     ;
             });
 
@@ -255,6 +263,7 @@ namespace R5T.Kefalonia.Construction
                 .Run(testingDataDirectoryContentPathsProviderAction)
                 .Run(timestampUtcDirectoryNameProviderAction)
                 .Run(visualStudioProjectFileSerializerAction)
+                .Run(visualStudioProjectFileStreamSerializerAction)
                 .Run(visualStudioProjectFileSerializerMessagesOutputFilePathProviderAction)
                 .Run(visualStudioProjectFileToXElementConverter)
                 .Run(visualStudioProjectFileDeserializationSettingsAction)

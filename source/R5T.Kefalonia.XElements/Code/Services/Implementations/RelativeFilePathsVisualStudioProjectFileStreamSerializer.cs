@@ -16,13 +16,13 @@ using R5T.VisualStudioProjectFileStuff;
 
 namespace R5T.Kefalonia.XElements
 {
-    public class RelativeFilePathsVisualStudioProjectFileSerializer : IRelativeFilePathsVisualStudioProjectFileSerializer
+    public class RelativeFilePathsVisualStudioProjectFileStreamSerializer : IRelativeFilePathsVisualStudioProjectFileStreamSerializer
     {
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
         private IVisualStudioProjectFileToXElementConverter VisualStudioProjectFileToXElementConverter { get; }
 
 
-        public RelativeFilePathsVisualStudioProjectFileSerializer(
+        public RelativeFilePathsVisualStudioProjectFileStreamSerializer(
             IStringlyTypedPathOperator stringlyTypedPathOperator,
             IVisualStudioProjectFileToXElementConverter visualStudioProjectFileToXElementConverter)
         {
@@ -30,9 +30,9 @@ namespace R5T.Kefalonia.XElements
             this.VisualStudioProjectFileToXElementConverter = visualStudioProjectFileToXElementConverter;
         }
 
-        public Task<ProjectFile> Deserialize(string projectFilePath, IMessageSink messageSink)
+        public Task<ProjectFile> Deserialize(Stream stream, IMessageSink messageSink)
         {
-            var xElement = XElement.Load(projectFilePath); // No async version.
+            var xElement = XElement.Load(stream); // No async version.
 
             var projectXElement = new ProjectXElement(xElement);
 
@@ -40,12 +40,11 @@ namespace R5T.Kefalonia.XElements
             return gettingProjectFile;
         }
 
-        public async Task Serialize(string filePath, ProjectFile projectFile, IMessageSink messageSink, bool overwrite = true)
+        public async Task Serialize(Stream stream, ProjectFile projectFile, IMessageSink messageSink, bool overwrite = true)
         {
             var projectXElement = await this.VisualStudioProjectFileToXElementConverter.ToProjectXElement(projectFile, messageSink);
 
             // Save to a StringWriter, then adjust the string to have the desired extra line breaks before serialization.
-            using (var fileStream = FileStreamHelper.NewWrite(filePath, overwrite)) // I want to use this overwrite logic.
             using (var stringWriter = new StringWriter())
             {
                 using (var xmlWriter = XmlWriterHelper.New(stringWriter))
@@ -100,7 +99,7 @@ namespace R5T.Kefalonia.XElements
                     modifiedText = stringBuilder.ToString();
                 }
 
-                using (var textWriter = new StreamWriter(fileStream))
+                using (var textWriter = new StreamWriter(stream))
                 {
                     await textWriter.WriteAsync(modifiedText);
                 }

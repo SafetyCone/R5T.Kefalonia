@@ -47,10 +47,10 @@ namespace R5T.Kefalonia.Construction
 
         protected override async Task SubMainAsync()
         {
-            //await this.DeserializeExampleProjectFile();
+            await this.DeserializeExampleProjectFile();
             //await this.TestXmlWriter();
             //await this.CompareXElementsUsingDeepEquals();
-            await this.CompareXElementsUsingOrderIndependentEquals();
+            //await this.CompareXElementsUsingOrderIndependentEquals();
         }
 
         private async Task CompareXElementsUsingOrderIndependentEquals()
@@ -137,16 +137,22 @@ namespace R5T.Kefalonia.Construction
 
             var stringlyTypedPathOperator = this.ServiceProvider.GetRequiredService<IStringlyTypedPathOperator>();
 
-            // Serialize to this temporary directory to get the project reference relative file paths correct.
+            // Pretend to serialize to a file in the testin data directory to get the project reference relative file paths to be correct.
             var tempOutputFilePath01 = stringlyTypedPathOperator.GetFilePath(testingDataDirectoryPath, "ProjectFile01.csproj");
-            
-            await this.VisualStudioProjectFileSerializer.SerializeAsync(tempOutputFilePath01, projectFile);
 
-            // No move to actual output directory.
-            var outputFilePath01 = this.TemporaryDirectoryFilePathProvider.GetTemporaryDirectoryFilePath("ProjectFile01.csproj");
+            var visualStudioProjectFileStreamSerializer = this.ServiceProvider.GetRequiredService<IVisualStudioProjectFileStreamSerializer>();
 
-            FileHelper.DeleteOnlyIfExists(outputFilePath01);
-            File.Move(tempOutputFilePath01, outputFilePath01);
+            using (var memoryStream = new MemoryStream())
+            {
+                await visualStudioProjectFileStreamSerializer.SerializeAsync(memoryStream, tempOutputFilePath01, projectFile);
+
+                // Now actually serialize to the output file.
+                var outputFilePath01 = this.TemporaryDirectoryFilePathProvider.GetTemporaryDirectoryFilePath("ProjectFile01.csproj");
+                using (var fileStream = FileStreamHelper.NewWrite(outputFilePath01))
+                {
+                    fileStream.Write(memoryStream.ToArray());
+                }
+            }
         }
     }
 }
