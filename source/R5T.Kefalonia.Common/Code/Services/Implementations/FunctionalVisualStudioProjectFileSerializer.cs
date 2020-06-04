@@ -124,6 +124,14 @@ namespace R5T.Kefalonia.Common
             // Test message output.
             await compositeMessageSink.AddOutputMessageAsync(this.NowUtcProvider, $"Serialization of:\n{projectFilePath}");
 
+            // Change all project reference paths to be relative, not absolute, using the input project file path.
+            foreach (var projectReference in projectFile.ProjectReferences)
+            {
+                var projectReferenceRelativePath = this.StringlyTypedPathOperator.GetRelativePathFileToFile(projectFilePath, projectReference.ProjectFilePath);
+
+                projectReference.ProjectFilePath = projectReferenceRelativePath;
+            }
+
             // Validate project file.
             await this.ValidateProjectFileAsync(projectFile, messageSink);
             
