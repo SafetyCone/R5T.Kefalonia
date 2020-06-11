@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-using R5T.XmlStuff;
+using R5T.Magyar.Xml;
 
 
 namespace R5T.Kefalonia.Construction

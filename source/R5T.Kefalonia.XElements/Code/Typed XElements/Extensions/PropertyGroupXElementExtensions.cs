@@ -5,7 +5,7 @@ using R5T.Magyar;
 using R5T.Ostersund;
 using R5T.Ostersund.Extensions;
 using R5T.VisualStudioProjectFileStuff;
-using R5T.XmlStuff;
+using R5T.T0005;
 
 
 namespace R5T.Kefalonia.XElements

@@ -11,9 +11,9 @@
     <ProjectReference Include="..\..\..\R5T.Kefalonia.Base\source\R5T.Kefalonia.Base\R5T.Kefalonia.Base.csproj" />
     <ProjectReference Include="..\..\..\R5T.Lombardy.Base\source\R5T.Lombardy.Base\R5T.Lombardy.Base.csproj" />
     <ProjectReference Include="..\..\..\R5T.Magyar\source\R5T.Magyar\R5T.Magyar.csproj" />
+    <ProjectReference Include="..\..\..\R5T.T0005\source\R5T.T0005\R5T.T0005.csproj" />
     <ProjectReference Include="..\R5T.Kefalonia.Common\R5T.Kefalonia.Common.csproj" />
     <ProjectReference Include="..\R5T.VisualStudioProjectFileStuff\R5T.VisualStudioProjectFileStuff.csproj" />
-    <ProjectReference Include="..\R5T.XmlStuff\R5T.XmlStuff.csproj" />
   </ItemGroup>
 
 </Project>
