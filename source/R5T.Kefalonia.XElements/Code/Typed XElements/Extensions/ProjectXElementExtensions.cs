@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 
-using R5T.VisualStudioProjectFileStuff;
+using R5T.T0006;
 
 
 namespace R5T.Kefalonia.XElements

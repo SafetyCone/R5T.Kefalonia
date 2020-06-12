@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using R5T.D0010;
+using R5T.T0006;
+
 using R5T.Gloucester.Types;
 using R5T.Lombardy;
 using R5T.Magyar.IO;
 
 using R5T.Kefalonia.Common;
-using R5T.VisualStudioProjectFileStuff;
 
 
 namespace R5T.Kefalonia.XElements

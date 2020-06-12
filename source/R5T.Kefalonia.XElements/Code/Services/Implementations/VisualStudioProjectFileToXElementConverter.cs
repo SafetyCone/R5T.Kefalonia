@@ -4,15 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-using R5T.T0002;
-
 using R5T.D0001;
+using R5T.T0002;
+using R5T.T0006;
 using R5T.D0010;
 
 using R5T.Angleterria;
 using R5T.Ostersund.Extensions;
 using R5T.Gloucester.Types;
-using R5T.VisualStudioProjectFileStuff;
 
 using R5T.Kefalonia.Common;
 
