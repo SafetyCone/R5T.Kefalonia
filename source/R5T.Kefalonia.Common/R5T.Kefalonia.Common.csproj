@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\R5T.D0010\source\R5T.D0010.Default\R5T.D0010.Default.csproj" />
     <ProjectReference Include="..\..\..\R5T.D0010\source\R5T.D0010.Extensions\R5T.D0010.Extensions.csproj" />
     <ProjectReference Include="..\..\..\R5T.Dacia\source\R5T.Dacia\R5T.Dacia.csproj" />
     <ProjectReference Include="..\..\..\R5T.Gloucester.Types\source\R5T.Gloucester.Types\R5T.Gloucester.Types.csproj" />
