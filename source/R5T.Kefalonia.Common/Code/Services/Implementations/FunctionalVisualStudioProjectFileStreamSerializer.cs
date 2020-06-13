@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using R5T.D0001;
 using R5T.D0010;
+using R5T.D0010.Default;
+
 using R5T.Gloucester.Types;
 using R5T.Lombardy;
 

@@ -14,6 +14,6 @@ namespace R5T.Kefalonia.Common
     public interface IRelativeFilePathsVisualStudioProjectFileStreamSerializer
     {
         Task<ProjectFile> Deserialize(Stream stream, IMessageSink messageSink);
-        Task Serialize(Stream stream, ProjectFile value, IMessageSink messageSink, bool overwrite = true);
+        Task Serialize(Stream stream, ProjectFile value, IMessageSink messageSink);
     }
 }
