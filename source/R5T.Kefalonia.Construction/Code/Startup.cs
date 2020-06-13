@@ -17,6 +17,7 @@ using R5T.D0007.Standard;
 using R5T.D0008;
 using R5T.D0008.Standard;
 using R5T.D0010;
+using R5T.D0010.Default;
 using R5T.D0011;
 using R5T.D0011.Standard;
 using R5T.D0012;
@@ -61,7 +62,7 @@ namespace R5T.Kefalonia.Construction
             IServiceAction<IMessageFormatter> messageFormatterAction = ServiceAction<IMessageFormatter>.New(serviceCollection =>
             {
                 serviceCollection
-                    .AddSingleton<IMessageFormatter, DefaultMessageFormatter>()
+                    .AddSingleton<IMessageFormatter, MessageFormatter>()
                     ;
             });
             //IServiceAction<IMessageRepository> messageRepositoryAction = ServiceAction<IMessageRepository>.New(serviceCollection => serviceCollection.AddSingleton<IMessageRepository, InMemoryMessageRepository>()); // Adds the default in-memory message repository.

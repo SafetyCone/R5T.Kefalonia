@@ -10,7 +10,7 @@ using R5T.T0006;
 
 using R5T.Gloucester.Types;
 using R5T.Lombardy;
-using R5T.Magyar.IO;
+using R5T.Magyar.Xml;
 
 using R5T.Kefalonia.Common;
 
@@ -41,7 +41,7 @@ namespace R5T.Kefalonia.XElements
             return gettingProjectFile;
         }
 
-        public async Task Serialize(Stream stream, ProjectFile projectFile, IMessageSink messageSink, bool overwrite = true)
+        public async Task Serialize(Stream stream, ProjectFile projectFile, IMessageSink messageSink)
         {
             var projectXElement = await this.VisualStudioProjectFileToXElementConverter.ToProjectXElement(projectFile, messageSink);
 

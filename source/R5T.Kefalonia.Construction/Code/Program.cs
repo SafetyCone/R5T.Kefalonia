@@ -13,6 +13,7 @@ using R5T.Glenrothes;
 using R5T.Liverpool;
 using R5T.Lombardy;
 using R5T.Magyar.IO;
+using R5T.Magyar.Xml;
 
 
 namespace R5T.Kefalonia.Construction
