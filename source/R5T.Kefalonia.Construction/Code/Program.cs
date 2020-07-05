@@ -137,7 +137,7 @@ namespace R5T.Kefalonia.Construction
 
             var stringlyTypedPathOperator = this.ServiceProvider.GetRequiredService<IStringlyTypedPathOperator>();
 
-            // Pretend to serialize to a file in the testin data directory to get the project reference relative file paths to be correct.
+            // Pretend to serialize to a file in the testing data directory to get the project reference relative file paths to be correct.
             var tempOutputFilePath01 = stringlyTypedPathOperator.GetFilePath(testingDataDirectoryPath, "ProjectFile01.csproj");
 
             var visualStudioProjectFileStreamSerializer = this.ServiceProvider.GetRequiredService<IVisualStudioProjectFileStreamSerializer>();
