@@ -1,9 +1,9 @@
-﻿using System;
+using System;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Common
-{
-    public interface IVisualStudioProjectFileDeserializationSettings
+{[ServiceDefinitionMarker]
+    public interface IVisualStudioProjectFileDeserializationSettings:IServiceDefinition
     {
         bool ThrowAtErrorOccurrence { get; }
         bool ThrowIfInvalidProjectFile { get; }

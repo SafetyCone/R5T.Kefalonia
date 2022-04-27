@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 using R5T.D0006;
 using R5T.D0007;
 
-using R5T.Lombardy;
+using R5T.Lombardy;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
-{
-    public class ProgramSpecificMessagesOutputDirectoryPathProvider : IProgramSpecificMessagesOutputDirectoryPathProvider
+{[ServiceImplementationMarker]
+    public class ProgramSpecificMessagesOutputDirectoryPathProvider : IProgramSpecificMessagesOutputDirectoryPathProvider,IServiceImplementation
     {
         private IMessagesOutputBaseDirectoryPathProvider MessagesOutputBaseDirectoryPathProvider { get; }
         private IProgramNameDirectoryNameProvider ProgramNameDirectoryNameProvider { get; }

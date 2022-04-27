@@ -1,17 +1,17 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 using R5T.D0004;
 using R5T.Lombardy;
-using R5T.Magyar.Extensions;
+using R5T.Magyar.Extensions;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
-{
+{[ServiceImplementationMarker]
     /// <summary>
     /// Async, stringly-typed paths.
     /// </summary>
-    class ProjectFileDeserializationMessagesOutputFileNameProvider : IProjectFileDeserializationMessagesOutputFileNameProvider
+    class ProjectFileDeserializationMessagesOutputFileNameProvider : IProjectFileDeserializationMessagesOutputFileNameProvider,IServiceImplementation
     {
         private IFileNameOperator FileNameOperator { get; }
         private IGuidProvider GuidProvider { get; }

@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using System.Xml.Linq;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
-{
-    public class DeepEqualsXElementEqualityComparer : IXElementEqualityComparer
+{[ServiceImplementationMarker]
+    public class DeepEqualsXElementEqualityComparer : IXElementEqualityComparer,IServiceImplementation
     {
         public Task<bool> AreEqual(XElement xElement1, XElement xElement2)
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,12 +8,12 @@ using R5T.D0010;
 using R5T.D0010.Default;
 
 using R5T.Gloucester.Types;
-using R5T.Lombardy;
+using R5T.Lombardy;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Common
-{
-    public class FunctionalVisualStudioProjectFileStreamSerializer : IFunctionalVisualStudioProjectFileStreamSerializer
+{[ServiceImplementationMarker]
+    public class FunctionalVisualStudioProjectFileStreamSerializer : IFunctionalVisualStudioProjectFileStreamSerializer,IServiceImplementation
     {
         private IMessageFormatter MessageFormatter { get; }
         private INowUtcProvider NowUtcProvider { get; }

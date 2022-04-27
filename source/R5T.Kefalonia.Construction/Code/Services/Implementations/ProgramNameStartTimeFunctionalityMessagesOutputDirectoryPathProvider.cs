@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
+
+using R5T.Lombardy;
 
 using R5T.D0006;
 using R5T.D0007;
 using R5T.D0012;
-using R5T.Lombardy;
+using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
@@ -12,7 +14,8 @@ namespace R5T.Kefalonia.Construction
     /// <summary>
     /// Async, stringly-typed paths.
     /// </summary>
-    public class ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider : IFunctionalitySpecificMessagesOutputDirectoryPathProvider
+    [ServiceImplementationMarker]
+    public class ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider : IFunctionalitySpecificMessagesOutputDirectoryPathProvider, IServiceImplementation
     {
         private FunctionalityDirectoryNameProvider FunctionalityDirectoryNameProvider { get; }
         private IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider ProgramStartTimeSpecificMessagesOutputDirectoryPathProvider { get; }
@@ -20,7 +23,8 @@ namespace R5T.Kefalonia.Construction
 
 
         public ProgramNameStartTimeFunctionalityMessagesOutputDirectoryPathProvider(
-            FunctionalityDirectoryNameProvider functionalityDirectoryNameProvider,
+            // TODO, remove NotServiceComponent attribute when we actually test for service components.
+            [NotServiceComponent] FunctionalityDirectoryNameProvider functionalityDirectoryNameProvider,
             IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider programStartTimeSpecificMessagesOutputDirectoryPathProvider,
             IStringlyTypedPathOperator stringlyTypedPathOperator)
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,12 +11,15 @@ using R5T.Lombardy;
 using R5T.Magyar.Extensions;
 using R5T.Magyar.IO;
 
+using R5T.T0064;
+
 using R5T.Kefalonia.Common;
 
 
 namespace R5T.Kefalonia.Construction
 {
-    public class MessageRepository : IMessageRepository
+    [ServiceImplementationMarker]
+    public class MessageRepository : IMessageRepository, IServiceImplementation
     {
         private IMessageFormatter MessageFormatter { get; }
 
@@ -25,7 +28,10 @@ namespace R5T.Kefalonia.Construction
         private List<Message> InMemorySink { get; } = new List<Message>();
 
 
-        public MessageRepository(IMessageFormatter messageFormatter, IStringlyTypedPathOperator stringlyTypedPathOperator, string messagesOutputFilePath)
+        public MessageRepository(
+            IMessageFormatter messageFormatter,
+            IStringlyTypedPathOperator stringlyTypedPathOperator,
+            [NotServiceComponent] string messagesOutputFilePath)
         {
             this.MessageFormatter = messageFormatter;
 

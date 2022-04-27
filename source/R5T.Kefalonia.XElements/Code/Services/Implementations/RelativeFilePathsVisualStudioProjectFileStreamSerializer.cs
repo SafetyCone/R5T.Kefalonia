@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,12 +12,12 @@ using R5T.Gloucester.Types;
 using R5T.Lombardy;
 using R5T.Magyar.Xml;
 
-using R5T.Kefalonia.Common;
+using R5T.Kefalonia.Common;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.XElements
-{
-    public class RelativeFilePathsVisualStudioProjectFileStreamSerializer : IRelativeFilePathsVisualStudioProjectFileStreamSerializer
+{[ServiceImplementationMarker]
+    public class RelativeFilePathsVisualStudioProjectFileStreamSerializer : IRelativeFilePathsVisualStudioProjectFileStreamSerializer,IServiceImplementation
     {
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
         private IVisualStudioProjectFileToXElementConverter VisualStudioProjectFileToXElementConverter { get; }

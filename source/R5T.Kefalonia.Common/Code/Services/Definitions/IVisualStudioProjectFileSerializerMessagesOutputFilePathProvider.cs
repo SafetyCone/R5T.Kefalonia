@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+using System;
+using System.Threading.Tasks;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Common
-{
-    public interface IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider
+{[ServiceDefinitionMarker]
+    public interface IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider:IServiceDefinition
     {
         Task<string> GetVisualStudioProjectFileSerializerMessagesOutputFilePathAsync(string functionalityName, string projectFilePath);
     }

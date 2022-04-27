@@ -1,9 +1,9 @@
-﻿using System;
+using System;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Common
-{
-    public class VisualStudioProjectFileDeserializationSettings : IVisualStudioProjectFileDeserializationSettings
+{[ServiceImplementationMarker]
+    public class VisualStudioProjectFileDeserializationSettings : IVisualStudioProjectFileDeserializationSettings,IServiceImplementation
     {
         public bool ThrowAtErrorOccurrence { get; set; }
         public bool ThrowIfAnyErrorAtEnd { get; set; }

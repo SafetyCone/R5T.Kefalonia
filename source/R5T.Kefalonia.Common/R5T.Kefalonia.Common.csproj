@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\..\R5T.Gloucester.Types\source\R5T.Gloucester.Types\R5T.Gloucester.Types.csproj" />
     <ProjectReference Include="..\..\..\R5T.Lombardy.Base\source\R5T.Lombardy.Base\R5T.Lombardy.Base.csproj" />
     <ProjectReference Include="..\..\..\R5T.Magyar\source\R5T.Magyar\R5T.Magyar.csproj" />
+    <ProjectReference Include="..\..\..\R5T.T0064\source\R5T.T0064\R5T.T0064.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,12 +13,12 @@ using R5T.Angleterria;
 using R5T.Ostersund.Extensions;
 using R5T.Gloucester.Types;
 
-using R5T.Kefalonia.Common;
+using R5T.Kefalonia.Common;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.XElements
-{
-    public class VisualStudioProjectFileToXElementConverter : IVisualStudioProjectFileToXElementConverter
+{[ServiceImplementationMarker]
+    public class VisualStudioProjectFileToXElementConverter : IVisualStudioProjectFileToXElementConverter,IServiceImplementation
     {
         #region Static
 

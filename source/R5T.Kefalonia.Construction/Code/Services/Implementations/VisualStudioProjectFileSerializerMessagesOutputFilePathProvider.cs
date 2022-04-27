@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 using R5T.D0006;
 
 using R5T.Lombardy;
 
-using R5T.Kefalonia.Common;
+using R5T.Kefalonia.Common;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
-{
-    class VisualStudioProjectFileSerializerMessagesOutputFilePathProvider : IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider
+{[ServiceImplementationMarker]
+    class VisualStudioProjectFileSerializerMessagesOutputFilePathProvider : IVisualStudioProjectFileSerializerMessagesOutputFilePathProvider,IServiceImplementation
     {
         private IProjectFileDeserializationMessagesOutputFileNameProvider ProjectFileDeserializationMessagesOutputFileNameProvider { get; }
         private IFunctionalitySpecificMessagesOutputDirectoryPathProvider FunctionalitySpecificMessagesOutputDirectoryPathProvider { get; }

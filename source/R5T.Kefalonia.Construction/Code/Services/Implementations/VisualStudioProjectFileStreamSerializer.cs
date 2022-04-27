@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
 using R5T.D0010;
 using R5T.Gloucester.Types;
 
-using R5T.Kefalonia.Common;
+using R5T.Kefalonia.Common;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
-{
-    class VisualStudioProjectFileStreamSerializer : IVisualStudioProjectFileStreamSerializer
+{[ServiceImplementationMarker]
+    class VisualStudioProjectFileStreamSerializer : IVisualStudioProjectFileStreamSerializer,IServiceImplementation
     {
         private IFunctionalVisualStudioProjectFileStreamSerializer FunctionalVisualStudioProjectFileSerializer { get; }
         private IMessageSinkProvider MessageSinkProvider { get; }

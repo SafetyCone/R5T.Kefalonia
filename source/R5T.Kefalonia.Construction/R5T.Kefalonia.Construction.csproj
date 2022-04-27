@@ -16,6 +16,7 @@
     <ProjectReference Include="..\..\..\R5T.Richmond.Types\source\R5T.Richmond.Types\R5T.Richmond.Types.csproj" />
     <ProjectReference Include="..\R5T.Kefalonia.XElements\R5T.Kefalonia.XElements.csproj" />
     <ProjectReference Include="..\R5T.Kefalonia\R5T.Kefalonia.csproj" />
+    <ProjectReference Include="..\..\..\R5T.T0064\source\R5T.T0064\R5T.T0064.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

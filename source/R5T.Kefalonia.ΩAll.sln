@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R5T.Kefalonia.XElements", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R5T.VisualStudioProjectFileStuff", "R5T.VisualStudioProjectFileStuff\R5T.VisualStudioProjectFileStuff.csproj", "{0E5DC111-0965-4920-B96C-A24CA2D5846E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Dependencies", "_Dependencies", "{4562AD5B-0499-493A-98DA-A88E06D504C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R5T.T0064", "..\..\R5T.T0064\source\R5T.T0064\R5T.T0064.csproj", "{9F367D06-4297-4187-A26E-B1C4B86730F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,5 +90,20 @@ Global
 		{0E5DC111-0965-4920-B96C-A24CA2D5846E}.Release|x64.Build.0 = Release|Any CPU
 		{0E5DC111-0965-4920-B96C-A24CA2D5846E}.Release|x86.ActiveCfg = Release|Any CPU
 		{0E5DC111-0965-4920-B96C-A24CA2D5846E}.Release|x86.Build.0 = Release|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Debug|x64.Build.0 = Debug|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Debug|x86.Build.0 = Debug|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Release|x64.ActiveCfg = Release|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Release|x64.Build.0 = Release|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Release|x86.ActiveCfg = Release|Any CPU
+		{9F367D06-4297-4187-A26E-B1C4B86730F1}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9F367D06-4297-4187-A26E-B1C4B86730F1} = {4562AD5B-0499-493A-98DA-A88E06D504C0}
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 using R5T.D0005;
@@ -8,17 +8,17 @@ using R5T.D0010.Default;
 
 using R5T.Lombardy;
 
-using R5T.Kefalonia.Common;
+using R5T.Kefalonia.Common;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
-{
+{[ServiceImplementationMarker]
     /// <summary>
     /// Manages a singleton <see cref="IMessageSink"/> instance for the application.
     /// * DI recommended.
     /// * Singleton recommended.
     /// </summary>
-    public class DefaultMessageSinkProvider : IMessageSinkProvider
+    public class DefaultMessageSinkProvider : IMessageSinkProvider,IServiceImplementation
     {
         private const IMessageSink NullMessageSink = null;
 

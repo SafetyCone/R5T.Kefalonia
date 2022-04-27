@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using R5T.D0001;
 using R5T.D0010;
 using R5T.Gloucester.Types;
-using R5T.Ostersund;
+using R5T.Ostersund;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Common
-{
-    public class VisualStudioProjectFileValidator : IVisualStudioProjectFileValidator
+{[ServiceImplementationMarker]
+    public class VisualStudioProjectFileValidator : IVisualStudioProjectFileValidator,IServiceImplementation
     {
         private INowUtcProvider NowUtcProvider { get; }
 
