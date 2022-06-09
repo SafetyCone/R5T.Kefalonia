@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\R5T.Chalandri.DropboxRivetTestingData\source\R5T.Chalandri.DropboxRivetTestingData\R5T.Chalandri.DropboxRivetTestingData.csproj" />
     <ProjectReference Include="..\..\..\R5T.D0001\source\R5T.D0001.Standard\R5T.D0001.Standard.csproj" />
@@ -18,11 +17,11 @@
     <ProjectReference Include="..\R5T.Kefalonia\R5T.Kefalonia.csproj" />
     <ProjectReference Include="..\..\..\R5T.T0064\source\R5T.T0064\R5T.T0064.csproj" />
   </ItemGroup>
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>7.3</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591;1573</NoWarn>
   </PropertyGroup>
-
 </Project>

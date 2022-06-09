@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>R5T.Kefalonia.XElements</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591;1573</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\R5T.D0010\source\R5T.D0010.Extensions\R5T.D0010.Extensions.csproj" />
     <ProjectReference Include="..\..\..\R5T.Gloucester.Types\source\R5T.Gloucester.Types\R5T.Gloucester.Types.csproj" />
@@ -16,5 +16,4 @@
     <ProjectReference Include="..\R5T.Kefalonia.Common\R5T.Kefalonia.Common.csproj" />
     <ProjectReference Include="..\..\..\R5T.T0064\source\R5T.T0064\R5T.T0064.csproj" />
   </ItemGroup>
-
 </Project>
