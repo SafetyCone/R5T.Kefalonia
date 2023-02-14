@@ -29,7 +29,7 @@ namespace R5T.Kefalonia.Construction
         public async Task<string> GetProgramSpecificMessagesOutputDirectoryPath()
         {
             var gettingMessagesOutputBaseDirectoryPath = this.MessagesOutputBaseDirectoryPathProvider.GetMessagesOutputBaseDirectoryPathAsync();
-            var gettingProgramNameDirectoryName = this.ProgramNameDirectoryNameProvider.GetProgramNameDirectoryNameAsync();
+            var gettingProgramNameDirectoryName = this.ProgramNameDirectoryNameProvider.GetProgramNameDirectoryName();
 
             await Task.WhenAll(
                 gettingMessagesOutputBaseDirectoryPath,

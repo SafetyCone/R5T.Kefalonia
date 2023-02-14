@@ -56,7 +56,7 @@ namespace R5T.Kefalonia.XElements
             {
                 var languageVersionString = childXElement.Value;
 
-                languageVersion = ProjectFileValues.ParseVersion(languageVersionString);
+                languageVersion = ProjectFileValues.ParseLanguageVersion(languageVersionString);
             }
             else
             {

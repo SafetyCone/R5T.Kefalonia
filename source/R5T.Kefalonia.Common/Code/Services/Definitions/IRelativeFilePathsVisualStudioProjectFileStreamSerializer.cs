@@ -7,10 +7,11 @@ using R5T.Gloucester.Types;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Common
-{[ServiceDefinitionMarker]
+{
     /// <summary>
     /// Produces a Visual Studio project file result, where the project file result still has relative project file paths.
     /// </summary>
+    [ServiceDefinitionMarker]
     public interface IRelativeFilePathsVisualStudioProjectFileStreamSerializer:IServiceDefinition
     {
         Task<ProjectFile> Deserialize(Stream stream, IMessageSink messageSink);

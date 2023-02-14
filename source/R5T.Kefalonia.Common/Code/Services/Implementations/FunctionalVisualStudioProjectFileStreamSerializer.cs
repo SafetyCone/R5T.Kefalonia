@@ -95,7 +95,7 @@ namespace R5T.Kefalonia.Common
             // Now create the messages output file sink for this functionality.
             var messagesOutputFilePath = await this.GetMessagesOutputFilePathAsync(functionalityName, projectFilePath);
 
-            var fileFormattedMessageSink = new FileFormattedMessageSink(this.StringlyTypedPathOperator, messagesOutputFilePath);
+            var fileFormattedMessageSink = new FileFormattedMessageSink(messagesOutputFilePath, this.StringlyTypedPathOperator);
 
             // Create composite message sink for all sub-functionality to use, including 1) the parent functionality's message sink, the message repository for use in determining if there were any errors, and the file message sink for persistence of messages from this functionality.
             var compositeMessageSink = new CompositeMessageSink(this.MessageFormatter, new[] { parentMessageSink, inMemoryMessageRepository }, new[] { fileFormattedMessageSink });
@@ -107,7 +107,7 @@ namespace R5T.Kefalonia.Common
             var isValidProjectFile = await this.VisualStudioProjectFileValidator.Validate(projectFile, messageSink);
             if (!isValidProjectFile)
             {
-                var timestampUtc = await this.NowUtcProvider.GetNowUtcAsync();
+                var timestampUtc = await this.NowUtcProvider.GetNowUtc();
                 await messageSink.AddErrorMessageAsync(timestampUtc, "Project file invalid.");
 
                 if (this.VisualStudioProjectFileDeserializationSettings.ThrowIfInvalidProjectFile)

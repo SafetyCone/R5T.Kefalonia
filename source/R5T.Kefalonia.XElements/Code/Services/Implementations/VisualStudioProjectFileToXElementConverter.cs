@@ -91,7 +91,7 @@ namespace R5T.Kefalonia.XElements
 
         private async Task ReportError(string message, IMessageSink messageSink)
         {
-            var nowUtc = await this.NowUtcProvider.GetNowUtcAsync();
+            var nowUtc = await this.NowUtcProvider.GetNowUtc();
 
             await messageSink.AddErrorMessageAsync(nowUtc, message);
 
@@ -103,7 +103,7 @@ namespace R5T.Kefalonia.XElements
 
         private async Task ReportErrors(IEnumerable<string> messages, IMessageSink messageSink)
         {
-            var nowUtc = await this.NowUtcProvider.GetNowUtcAsync();
+            var nowUtc = await this.NowUtcProvider.GetNowUtc();
 
             foreach (var message in messages)
             {
@@ -211,7 +211,7 @@ namespace R5T.Kefalonia.XElements
 
         private Task LanguageVersionElementHandler(XElement xLanguageVersion, ProjectFile projectFile, IMessageSink messageSink)
         {
-            projectFile.LanguageVersion = ProjectFileValues.ParseVersion(xLanguageVersion.Value);
+            projectFile.LanguageVersion = ProjectFileValues.ParseLanguageVersion(xLanguageVersion.Value);
 
             return Task.CompletedTask;
         }

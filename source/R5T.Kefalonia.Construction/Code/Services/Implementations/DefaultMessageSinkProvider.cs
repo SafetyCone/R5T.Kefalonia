@@ -12,12 +12,13 @@ using R5T.Kefalonia.Common;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
-{[ServiceImplementationMarker]
+{
     /// <summary>
     /// Manages a singleton <see cref="IMessageSink"/> instance for the application.
     /// * DI recommended.
     /// * Singleton recommended.
     /// </summary>
+    [ServiceImplementationMarker]
     public class DefaultMessageSinkProvider : IMessageSinkProvider,IServiceImplementation
     {
         private const IMessageSink NullMessageSink = null;

@@ -68,7 +68,7 @@ namespace R5T.Kefalonia.Construction
             var messagesToClear = this.InMemorySink
                 .Where(predicate);
 
-            this.InMemorySink.RemoveAll(messagesToClear);
+            this.InMemorySink.RemoveRange(messagesToClear);
 
             return Task.CompletedTask;
         }

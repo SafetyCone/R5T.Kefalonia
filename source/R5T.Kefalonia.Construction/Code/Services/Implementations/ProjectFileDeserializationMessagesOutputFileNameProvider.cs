@@ -7,10 +7,11 @@ using R5T.Magyar.Extensions;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
-{[ServiceImplementationMarker]
+{
     /// <summary>
     /// Async, stringly-typed paths.
     /// </summary>
+    [ServiceImplementationMarker]
     class ProjectFileDeserializationMessagesOutputFileNameProvider : IProjectFileDeserializationMessagesOutputFileNameProvider,IServiceImplementation
     {
         private IFileNameOperator FileNameOperator { get; }

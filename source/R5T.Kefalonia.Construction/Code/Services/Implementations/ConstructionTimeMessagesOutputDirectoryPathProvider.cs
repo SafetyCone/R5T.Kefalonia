@@ -6,10 +6,11 @@ using R5T.Lombardy;using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
-{[ServiceImplementationMarker]
+{
     /// <summary>
     /// A dummy <see cref="IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider"/> implementation that always returns a single directory, so that during construction you don't have to chase after the output files.
     /// </summary>
+    [ServiceImplementationMarker]
     public class ConstructionTimeMessagesOutputDirectoryPathProvider : IProgramStartTimeSpecificMessagesOutputDirectoryPathProvider,IServiceImplementation
     {
         public const string ConstructionDirectoryName = "Construction";

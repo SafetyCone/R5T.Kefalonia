@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 using R5T.Gloucester.Types;
-using R5T.Magyar.IO;using R5T.T0064;
+
+using R5T.T0064;
 
 
 namespace R5T.Kefalonia.Construction
@@ -18,7 +20,7 @@ namespace R5T.Kefalonia.Construction
             this.VisualStudioProjectFileStreamSerializer = visualStudioProjectFileStreamSerializer;
         }
 
-        public async Task<ProjectFile> DeserializeAsync(string projectFilePath)
+        public async Task<ProjectFile> Deserialize(string projectFilePath)
         {
             using (var fileStream = FileStreamHelper.NewRead(projectFilePath))
             {
@@ -27,7 +29,7 @@ namespace R5T.Kefalonia.Construction
             }
         }
 
-        public async Task SerializeAsync(string projectFilePath, ProjectFile value, bool overwrite = true)
+        public async Task Serialize(string projectFilePath, ProjectFile value, bool overwrite = true)
         {
             using (var fileStream = FileStreamHelper.NewWrite(projectFilePath, overwrite))
             {

@@ -129,7 +129,7 @@ namespace R5T.Kefalonia.Construction
         {
             var exampleVisualStudioProjectFilePath01 = this.TestingDataDirectoryContentPathsProvider.GetExampleVisualStudioProjectFilePath01();
 
-            var projectFile = await this.VisualStudioProjectFileSerializer.DeserializeAsync(exampleVisualStudioProjectFilePath01);
+            var projectFile = await this.VisualStudioProjectFileSerializer.Deserialize(exampleVisualStudioProjectFilePath01);
 
             var testingDataDirectoryPathProvider = this.ServiceProvider.GetRequiredService<ITestingDataDirectoryPathProvider>();
 
